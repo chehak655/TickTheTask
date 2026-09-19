@@ -18,7 +18,7 @@ depends_on = None
 
 def upgrade() -> None:
     # Users columns
-    op.add_column('users', sa.Column('is_email_verified', sa.Boolean(), nullable=False, server_default=sa.text('0')))
+    op.add_column('users', sa.Column('is_email_verified', sa.Boolean(), nullable=False, server_default=sa.text('false')))
     op.add_column('users', sa.Column('email_verification_token', sa.String(length=255), nullable=True))
     op.add_column('users', sa.Column('email_verification_expires_at', sa.DateTime(timezone=True), nullable=True))
     op.add_column('users', sa.Column('last_verification_sent_at', sa.DateTime(timezone=True), nullable=True))
