@@ -56,5 +56,6 @@ async def generic_db_error_handler(request: Request, exc: SQLAlchemyError):
     """Catches any remaining database layer exceptions."""
     return JSONResponse(
         status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-        content={"detail": "An internal database error occurred."}
+        content={"detail": f"An internal database error occurred. {str(exc)}"}
     )
+

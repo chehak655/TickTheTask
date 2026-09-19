@@ -84,6 +84,13 @@ app.add_middleware(
 )
 
 # ── Routers ─────────────────────────────────────────────────────────────────
+from app.database.session import engine
+from app.models import Base
+
+@app.on_event("startup")
+async def startup_event():
+    Base.metadata.create_all(bind=engine)
+
 # Health Checks: mounted at /health, /api/health, and /api/v1/health for backward compatibility
 app.include_router(health.router)
 app.include_router(health.router, prefix="/api")
@@ -112,3 +119,4 @@ def root():
         "docs_url": f"{settings.API_V1_STR}/docs",
         "health_check": "/health",
     }
+
