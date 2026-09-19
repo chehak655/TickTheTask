@@ -77,11 +77,10 @@ app.add_exception_handler(SQLAlchemyError, generic_db_error_handler)
 
 app.add_middleware(
     CORSMiddleware,
-    # Allow localhost, 127.0.0.1, and private LAN IPs (192.168.*, 10.*, 172.16-31.*) with any port
-    allow_origin_regex=r"^https?://(localhost|127\.0\.0\.1|192\.168\.\d{1,3}\.\d{1,3}|10\.\d{1,3}\.\d{1,3}\.\d{1,3}|172\.(1[6-9]|2\d|3[0-1])\.\d{1,3}\.\d{1,3})(:\d+)?$",
+    allow_origins=settings.BACKEND_CORS_ORIGINS,
     allow_credentials=True,
-    allow_methods=["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
-    allow_headers=["*"],
+    allow_methods=['*'],
+    allow_headers=['*'],
 )
 
 # ── Routers ─────────────────────────────────────────────────────────────────
