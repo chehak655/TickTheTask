@@ -40,6 +40,8 @@ jobs:
       - name: Build Web App
         working-directory: ./web
         run: npm run build
+        env:
+          VITE_API_URL: ${{ secrets.VITE_API_URL }}
         
       - name: Copy index.html to 404.html
         working-directory: ./web
