@@ -114,8 +114,8 @@ def test_error_responses_clean_and_no_traceback_leak(client):
     assert dup_res.status_code == 409
     body = dup_res.json()
     assert "detail" in body
-    # No SQL queries or raw MySQL engine messages in detail
-    assert "pymysql" not in dup_res.text.lower()
+    # No SQL queries or raw Database engine messages in detail
+    assert "pyDatabase" not in dup_res.text.lower()
     assert "sqlalchemy" not in dup_res.text.lower()
     assert "traceback" not in dup_res.text.lower()
 
@@ -151,7 +151,7 @@ def test_database_operational_error_returns_503(client):
     headers = create_auth_user(client)
 
     with patch("app.services.task_service.get_tasks") as mock_get_tasks:
-        mock_get_tasks.side_effect = OperationalError("Can't connect to MySQL server", None, None)
+        mock_get_tasks.side_effect = OperationalError("Can't connect to Database server", None, None)
         res = client.get("/api/tasks", headers=headers)
         assert res.status_code == 503
         assert "unavailable" in res.json()["detail"].lower()

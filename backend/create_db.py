@@ -1,38 +1,41 @@
 import sys
-import pymysql
-from sqlalchemy import create_engine, text
+from sqlalchemy import create_engine
 from app.core.config import settings
 from app.core.database import Base, engine
 from app.models import User, Task
 
-
-def init_mysql_database():
-    """Attempts to connect to MySQL host and ensure taskflow_db exists."""
-    print(f"[*] Checking MySQL server at {settings.DB_HOST}:{settings.DB_PORT}...")
+def init_postgres_database():
+    """Attempts to connect to PostgreSQL host and ensure database exists."""
+    print(f"[*] Checking PostgreSQL server at {settings.DB_HOST}:{settings.DB_PORT}...")
     try:
-        connection = pymysql.connect(
+        import psycopg2
+        from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
+        
+        connection = psycopg2.connect(
             host=settings.DB_HOST,
             port=settings.DB_PORT,
             user=settings.DB_USER,
             password=settings.DB_PASSWORD,
-            charset="utf8mb4",
+            dbname="postgres",
             connect_timeout=5
         )
+        connection.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
         with connection.cursor() as cursor:
-            cursor.execute(
-                f"CREATE DATABASE IF NOT EXISTS `{settings.DB_NAME}` "
-                "CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
-            )
+            cursor.execute(f"SELECT 1 FROM pg_catalog.pg_database WHERE datname = '{settings.DB_NAME}'")
+            exists = cursor.fetchone()
+            if not exists:
+                cursor.execute(f"CREATE DATABASE {settings.DB_NAME}")
+                print(f"[+] Successfully created PostgreSQL database '{settings.DB_NAME}'.")
+            else:
+                print(f"[+] PostgreSQL database '{settings.DB_NAME}' already exists.")
         connection.close()
-        print(f"[+] Successfully ensured MySQL database '{settings.DB_NAME}' exists.")
         return True
-    except pymysql.MySQLError as e:
-        print(f"[-] Could not connect to MySQL server: {e}")
+    except ImportError:
+        print("[-] psycopg2 is not installed.")
         return False
     except Exception as e:
-        print(f"[-] Unexpected connection error: {e}")
+        print(f"[-] Could not connect to PostgreSQL server: {e}")
         return False
-
 
 def create_tables(target_engine=None):
     """Creates all SQLAlchemy tables for registered models."""
@@ -43,22 +46,21 @@ def create_tables(target_engine=None):
     for table_name in Base.metadata.tables.keys():
         print(f"    - {table_name}")
 
-
 def main():
-    print("=== TaskFlow Database Initializer ===")
+    print("=== TickTheTask Database Initializer ===")
     db_url = settings.get_database_url()
 
-    if "mysql" in db_url:
-        mysql_online = init_mysql_database()
-        if mysql_online:
+    if "postgres" in db_url:
+        pg_online = init_postgres_database()
+        if pg_online:
             create_tables(engine)
             print("[+] Database initialization complete!")
             return 0
         else:
-            print("\n[!] MySQL is currently offline or unreachable.")
-            print("    Please ensure MySQL Server is running and credentials in backend/.env are correct.")
+            print("\n[!] PostgreSQL is currently offline or unreachable.")
+            print("    Please ensure PostgreSQL Server is running and credentials in backend/.env are correct.")
             print("    Verifying table schemas against local SQLite database for validation...")
-            sqlite_engine = create_engine("sqlite:///./taskflow_test.db")
+            sqlite_engine = create_engine("sqlite:///./tickthetask_test.db")
             create_tables(sqlite_engine)
             print("[+] Models and schema definitions validated successfully!")
             return 0
@@ -67,6 +69,5 @@ def main():
         print("[+] Database initialization complete!")
         return 0
 
-
-if __name__ == "__main__":
+if __name__ == '__main__':
     sys.exit(main())

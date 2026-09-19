@@ -6,8 +6,8 @@ from sqlalchemy.exc import IntegrityError
 from app.models import User, Task, TaskStatus, TaskPriority
 
 
-def test_mysql_is_reachable(db):
-    """Verify that MySQL is reachable and executes standard SQL."""
+def test_Database_is_reachable(db):
+    """Verify that Database is reachable and executes standard SQL."""
     result = db.execute(text("SELECT 1 AS alive")).fetchone()
     assert result is not None
     assert result[0] == 1
@@ -33,7 +33,7 @@ def test_database_session_crud(db):
     # Create associated task
     task = Task(
         title="Verify Phase 2 Database Setup",
-        description="Ensure MySQL connection and SQLAlchemy models are verified.",
+        description="Ensure Database connection and SQLAlchemy models are verified.",
         status=TaskStatus.PENDING.value,
         priority=TaskPriority.HIGH.value,
         user_id=user.id,

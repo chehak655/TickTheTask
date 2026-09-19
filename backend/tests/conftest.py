@@ -12,10 +12,8 @@ from app.database.session import Base, get_db
 
 # Build connection URL for dedicated test database (taskflow_test_db)
 TEST_DB_NAME = "taskflow_test_db"
-password_part = f":{settings.DB_PASSWORD}" if settings.DB_PASSWORD else ""
-TEST_DATABASE_URL = (
-    f"mysql+pymysql://{settings.DB_USER}{password_part}@{settings.DB_HOST}:{settings.DB_PORT}/{TEST_DB_NAME}?charset=utf8mb4"
-)
+from sqlalchemy.engine.url import make_url
+TEST_DATABASE_URL = str(make_url(settings.get_database_url()).set(database="tickthetask_test_db"))
 
 test_engine = create_engine(
     TEST_DATABASE_URL,
@@ -119,3 +117,4 @@ def auth_headers(client: TestClient) -> dict:
     )
     token = login_res.json()["access_token"]
     return {"Authorization": f"Bearer {token}"}
+

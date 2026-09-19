@@ -44,7 +44,7 @@ Live demo: Not deployed yet.
 - Pytest
 
 ### Database
-- MySQL
+- PostgreSQL (Production) / MySQL (Local)
 
 ### Authentication & Services
 - JWT (JSON Web Tokens)
@@ -52,7 +52,7 @@ Live demo: Not deployed yet.
 - smtplib (Email Notifications)
 
 ## System Architecture
-TickTheTask utilizes a decoupled architecture. The React Web and React Native Mobile applications act as independent clients that consume the FastAPI REST API. The backend processes requests, validates them via Pydantic schemas, and executes CRUD operations asynchronously against a MySQL database. Dedicated background tasks handle deadline polling and SMTP email dispatching natively to prevent event-loop blocking.
+TickTheTask utilizes a decoupled architecture. The React Web and React Native Mobile applications act as independent clients that consume the FastAPI REST API. The backend processes requests, validates them via Pydantic schemas, and executes CRUD operations asynchronously against a PostgreSQL or MySQL database. Dedicated background tasks handle deadline polling and SMTP email dispatching natively to prevent event-loop blocking.
 
 *See [Architecture Guide](docs/architecture.md) for more details.*
 
@@ -70,13 +70,13 @@ TickTheTask/
 ## Installation Prerequisites
 - Node.js (v18+)
 - Python (v3.10+)
-- MySQL Server (v8+)
+- PostgreSQL (Production) / MySQL (Local) Server (v8+)
 - Git
 
 ## Local Setup Instructions
 
 ### 1. Database Setup
-Create a local MySQL database:
+Create a local PostgreSQL or MySQL database:
 `sql
 CREATE DATABASE tickthetask_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 `
@@ -88,7 +88,7 @@ python -m venv .venv
 .\.venv\Scripts\activate
 pip install -r requirements.txt
 `
-Copy ackend/.env.example to ackend/.env and update your MySQL credentials and Gmail App Password.
+Copy ackend/.env.example to ackend/.env and update your database credentials and Gmail App Password.
 Run migrations and start the server:
 `ash
 alembic upgrade head
@@ -114,7 +114,7 @@ npx expo start
 ## Environment Variables
 Always copy .env.example files to .env. 
 Never commit your .env file or expose your Gmail App Passwords. 
-- DB_PASSWORD: Your MySQL root/user password.
+- DB_PASSWORD: Your database password.
 - SECRET_KEY: A strong 32-character string for JWT signing.
 - SMTP_PASSWORD: A 16-character Google App Password for emails.
 
@@ -158,3 +158,4 @@ MIT License.
 3. Commit your changes (git commit -m 'Add some amazing feature').
 4. Push to the branch (git push origin feature/amazing-feature).
 5. Open a Pull Request.
+

@@ -13,9 +13,9 @@ class Settings(BaseSettings):
 
     # Database settings
     DB_HOST: str = "localhost"
-    DB_PORT: int = 3306
-    DB_USER: str = "root"
-    DB_PASSWORD: str = ""
+    DB_PORT: int = 5432
+    DB_USER: str = "postgres"
+    DB_PASSWORD: str = "postgres"
     DB_NAME: str = "tickthetask_db"
     DATABASE_URL: str = ""
 
@@ -158,15 +158,14 @@ class Settings(BaseSettings):
         }
 
     def get_database_url(self) -> str:
-        """Returns the configured database URL or constructs one for MySQL."""
+        """Returns the configured database URL or constructs one for PostgreSQL."""
         if self.DATABASE_URL and len(self.DATABASE_URL.strip()) > 0:
             return self.DATABASE_URL.replace('postgres://', 'postgresql://')
 
-        # Build MySQL connection string with utf8mb4 encoding
+        # Build PostgreSQL connection string
         password_part = f":{self.DB_PASSWORD}" if self.DB_PASSWORD else ""
         return (
-            f"mysql+pymysql://{self.DB_USER}{password_part}@{self.DB_HOST}:{self.DB_PORT}/"
-            f"{self.DB_NAME}?charset=utf8mb4"
+            f"postgresql+psycopg2://{self.DB_USER}{password_part}@{self.DB_HOST}:{self.DB_PORT}/{self.DB_NAME}"
         )
 
     model_config = SettingsConfigDict(
@@ -177,3 +176,4 @@ class Settings(BaseSettings):
 
 
 settings = Settings()
+

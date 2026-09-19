@@ -5,7 +5,7 @@ TickTheTask is a full-stack, cross-platform task management application consisti
 1. **Web Frontend:** A responsive React application built with Vite and Tailwind CSS.
 2. **Mobile Frontend:** A cross-platform mobile app built with React Native and Expo.
 3. **Backend API:** A high-performance Python application built with FastAPI.
-4. **Database:** A relational MySQL database accessed asynchronously via SQLAlchemy.
+4. **Database:** A relational database (PostgreSQL/MySQL) accessed asynchronously via SQLAlchemy.
 
 ## Request Flow
 1. The client (Web or Mobile) sends an HTTP request to the FastAPI backend.
@@ -29,3 +29,4 @@ TickTheTask is a full-stack, cross-platform task management application consisti
 The application uses Python's smtplib and email packages to send asynchronous notifications.
 - **OTP Delivery:** Triggered during registration.
 - **Task Reminders:** A background asyncio worker (eminder_scheduler.py) polls the database every 60 seconds. It identifies overdue or upcoming tasks and triggers email alerts natively through a dedicated thread pool to avoid blocking the async event loop.
+
