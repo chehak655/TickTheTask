@@ -1,134 +1,160 @@
 # TickTheTask
+**Plan it. Track it. Tick it off.**
 
-## Project Overview
-TickTheTask is a comprehensive, full-stack task management application designed to help users track their daily priorities, deadlines, and schedules. It features a seamless cross-platform experience with a React web interface, an Expo React Native mobile application, and a high-performance FastAPI Python backend. TickTheTask emphasizes productivity, providing secure authentication, calendar scheduling, real-time reminders, and multi-theme customization out of the box.
+TickTheTask is a comprehensive, full-stack task management application designed to help users track their daily priorities, deadlines, and schedules. It features a seamless cross-platform experience with a React web interface, an Expo React Native mobile application, and a high-performance FastAPI Python backend.
 
-## Features
-- **Task Management**: Create, read, update, and delete tasks with priorities, status tracking, and deadlines.
-- **Interactive Calendar**: View tasks by date, see exact due times, and differentiate between pending, completed, overdue, and high-priority tasks.
-- **Secure Authentication**: JWT-based stateless authentication paired with secure password hashing.
-- **Email OTP Verification**: Secure 4-digit One-Time Password verification via Gmail SMTP for account validation.
-- **Task Reminders**: Automated email reminders sent safely via background workers for upcoming deadlines.
-- **Multi-Theme Support**: Dark/Light modes along with built-in accent color themes .
-- **Network Resiliency**: Built-in support for seamless local-network cross-device testing.
+## Key Features
+- [x] Secure JWT-based Authentication & Registration
+- [x] Email OTP Verification
+- [x] Full Task CRUD (Create, Read, Update, Delete)
+- [x] Calendar-based Deadline Tracking
+- [x] Automated Email Reminders
+- [x] Multi-Theme Customization (Dark Mode & Lime Green Accents)
+- [x] Cross-platform support (Web, iOS, Android)
 
-## Technology Stack
-- **Backend**: Python 3.10+, FastAPI, SQLAlchemy (ORM), PyMySQL, Pytest, Pydantic.
-- **Web Frontend**: React, Vite, Tailwind CSS v4, React Router, Axios, Lucide React.
-- **Mobile Frontend**: React Native, Expo, Expo SecureStore, React Navigation.
-- **Database**: MySQL.
+## Screenshots
+> Note: Screenshots must be captured and placed in docs/screenshots/ manually. 
+
+**Screenshot Checklist:**
+- [ ] dashboard.png - The main web dashboard view.
+- [ ] login.png - The authentication screen.
+- [ ] 	ask-creation.png - The modal for creating a task.
+- [ ] calendar.png - The calendar deadline view.
+- [ ] mobile-dashboard.png - The main view on a mobile device.
+
+## Demo
+Live demo: Not deployed yet.
+
+## Tech Stack
+### Web Frontend
+- React 18
+- Vite
+- Tailwind CSS v4
+- Lucide React
+
+### Mobile Application
+- React Native
+- Expo
+- React Navigation
+
+### Backend
+- Python 3.10+
+- FastAPI
+- SQLAlchemy (Async)
+- Pytest
+
+### Database
+- MySQL
+
+### Authentication & Services
+- JWT (JSON Web Tokens)
+- Passlib (Bcrypt)
+- smtplib (Email Notifications)
+
+## System Architecture
+TickTheTask utilizes a decoupled architecture. The React Web and React Native Mobile applications act as independent clients that consume the FastAPI REST API. The backend processes requests, validates them via Pydantic schemas, and executes CRUD operations asynchronously against a MySQL database. Dedicated background tasks handle deadline polling and SMTP email dispatching natively to prevent event-loop blocking.
+
+*See [Architecture Guide](docs/architecture.md) for more details.*
 
 ## Project Structure
-```text
-TaskTracker/
-├── backend/            # FastAPI python server, database models, and endpoints
-├── web/                # React Vite web application
-├── mobile/             # Expo React Native mobile application
-├── docs/               # Documentation files
-├── .env.example        # Safe template for environment configurations
-├── LOCAL_NETWORK_SETUP.md # Guide for LAN testing
-└── start_tickthetask.bat  # Windows startup batch script
-```
+`	ext
+TickTheTask/
++-- backend/          # FastAPI Python API
++-- web/              # React/Vite Web App
++-- mobile/           # Expo React Native App
++-- docs/             # Project documentation
++-- .env.example      # Environment variable templates
++-- README.md         # Project entry point
+`
 
-## Prerequisites
-- **Node.js** (v18+ recommended)
-- **Python** (v3.10+ recommended)
-- **MySQL Server** (running locally on port 3306)
-- **Expo Go** app installed on your physical mobile device (or an Android/iOS emulator).
+## Installation Prerequisites
+- Node.js (v18+)
+- Python (v3.10+)
+- MySQL Server (v8+)
+- Git
 
-## Backend Installation
-1. Navigate to the backend directory: `cd backend`
-2. Create a virtual environment: `python -m venv .venv`
-3. Activate the virtual environment:
-   - Windows: `.\.venv\Scripts\activate`
-   - Mac/Linux: `source .venv/bin/activate`
-4. Install dependencies: `pip install -r requirements.txt`
+## Local Setup Instructions
 
-## Database Setup
-1. Ensure your local MySQL server is running.
-2. Log into MySQL and create the required database:
-   ```sql
-   CREATE DATABASE tickthetask_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-   ```
-3. Update your `.env` file with the correct `DB_USER` and `DB_PASSWORD`.
-4. The FastAPI application utilizes SQLAlchemy's `create_all` hook on startup to provision tables automatically if they do not exist.
+### 1. Database Setup
+Create a local MySQL database:
+`sql
+CREATE DATABASE tickthetask_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+`
 
-## Environment-Variable Configuration
-1. Copy the `.env.example` file provided in the root directory.
-2. Save it as `backend/.env`.
-3. Do NOT commit the `.env` file to version control. Keep all placeholder keys and update them with your real configurations (DB credentials, secret key, etc.).
+### 2. Backend Setup
+`ash
+cd backend
+python -m venv .venv
+.\.venv\Scripts\activate
+pip install -r requirements.txt
+`
+Copy ackend/.env.example to ackend/.env and update your MySQL credentials and Gmail App Password.
+Run migrations and start the server:
+`ash
+alembic upgrade head
+uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+`
 
-## Gmail App Password Setup
-To enable OTP verification and task reminders:
-1. Go to your **Google Account** settings.
-2. Navigate to **Security** > **2-Step Verification** (ensure this is enabled).
-3. Scroll down to **App Passwords**.
-4. Create a new App Password named "TickTheTask".
-5. Copy the 16-character code (without spaces) and paste it into your `backend/.env` under `SMTP_PASSWORD`.
-6. Set `SMTP_USERNAME` and `SMTP_FROM_EMAIL` to your Gmail address.
-
-## Backend Startup Commands
-From the `backend/` directory (with your virtual environment activated):
-```bash
-python -m uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
-```
-*Note: Binding to `0.0.0.0` is required to allow local network devices (like mobile phones) to reach the API.*
-
-## Web Startup Commands
-From the `web/` directory:
-```bash
+### 3. Web Setup
+`ash
+cd web
 npm install
-npm run dev -- --host 0.0.0.0
-```
+npm run dev
+`
 
-## Mobile Startup Commands
-From the `mobile/` directory:
-```bash
+### 4. Mobile Setup
+`ash
+cd mobile
 npm install
 npx expo start
-```
-Scan the generated QR code using the Expo Go app on your physical device.
+`
 
-## Local-Network Access Instructions
-To use TickTheTask across multiple devices on the same network:
-1. Both devices (e.g., your PC and mobile phone) must be connected to the same Wi-Fi network.
-2. The backend is configured with dynamic CORS regex that automatically allows private LAN IP address blocks (e.g., `192.168.x.x`, `10.x.x.x`).
-3. The Web and Mobile apps are coded to auto-resolve their host configurations. 
-4. If auto-resolution fails on your device, explicitly define the IP by modifying the `EXPO_PUBLIC_API_URL` or `VITE_API_URL` environment variables in their respective `.env` files.
-*(See `LOCAL_NETWORK_SETUP.md` for extended documentation).*
+*See [Setup Guide](docs/setup.md) and [Local Network Setup](LOCAL_NETWORK_SETUP.md) for detailed configuration.*
 
-## OTP Verification Instructions
-1. Register an account using a valid email address.
-2. The backend generates a cryptographically secure 4-digit OTP.
-3. The OTP is sent to your email and is valid for **10 minutes**.
-4. Enter the code on the verification screen.
-5. **Security**: The system locks out OTP verification after 5 consecutive incorrect attempts. You must wait for the 60-second cooldown period before requesting a resend.
+## Environment Variables
+Always copy .env.example files to .env. 
+Never commit your .env file or expose your Gmail App Passwords. 
+- DB_PASSWORD: Your MySQL root/user password.
+- SECRET_KEY: A strong 32-character string for JWT signing.
+- SMTP_PASSWORD: A 16-character Google App Password for emails.
 
-## Testing Commands
-- **Backend**: `python -m pytest -v` (Requires a running local MySQL instance on port 3306).
-- **Web (Lint & Build)**: `npm run lint` followed by `npm run build`.
-- **Mobile (Build Check)**: `npx expo export`.
+## API Documentation
+Once the backend is running, visit:
+- **Swagger UI:** http://127.0.0.1:8000/docs
+- **ReDoc:** http://127.0.0.1:8000/redoc
 
-## Troubleshooting Guide
-- **Database OperationalError (2003)**: Ensure MySQL is running on localhost:3306 and the credentials in `.env` match.
-- **SMTP Authentication Error**: Verify your Google App Password. Do not use your standard Gmail account password.
-- **Expo Network Issues / Blank Screens**: If the mobile app cannot connect to the backend, try starting expo with the tunnel flag: `npx expo start --tunnel`.
-- **Unexpected Token in Expo Build**: Ensure your Node.js and Expo versions match the project's required versions (e.g., `npx expo install --fix`).
-- **401 Unauthorized loops**: Close the app completely or clear local storage to flush out stale JWT tokens.
+*See [API Guide](docs/api.md).*
 
-## Security Notes
-- **JWT Secrets**: The application strictly refuses to boot in `production` mode if the `SECRET_KEY` is weak, default, or shorter than 32 characters.
-- **CORS Constraints**: Wildcard CORS (`*`) paired with credentials is fundamentally blocked in production mode.
-- **Credential Masking**: Stack traces, environment variables, and email tokens are sanitized and never exposed in REST API HTTP responses.
-- **Git Security**: `.env` files are tracked in `.gitignore`. **Never track production secrets via Git.**
+## Testing Instructions
+- **Backend:** pytest -v (inside ackend/ with virtualenv activated).
+- **Web:** 
+pm run lint and 
+pm run build (inside web/).
+- **Mobile:** 
+px expo install --check (inside mobile/).
 
-## Deployment Instructions
-1. **Database**: Provision a managed MySQL database (e.g., AWS RDS, GCP Cloud SQL).
-2. **Backend**: Host the FastAPI server on platforms like Render, Heroku, or GCP Cloud Run. Set `ENVIRONMENT=production` and map all `.env` secrets into the cloud configuration dashboard.
-3. **Frontend Web**: Deploy the `web/dist` folder to Vercel, Netlify, or Firebase Hosting. Ensure API URL mappings point to your hosted backend.
-4. **Mobile**: Build standalone `.apk` or `.ipa` files using Expo Application Services (EAS): `eas build --profile production`.
+*See [Testing Guide](docs/testing.md).*
+
+## Security Practices
+TickTheTask employs strict tenant isolation to prevent unauthorized data access. All queries rely on verified JWT payloads. Passwords and OTPs are heavily hashed using bcrypt, and CORS headers explicitly control domain access.
+
+*See [Security Guide](docs/security.md).*
 
 ## Known Limitations
-- **Database Hard Requirement**: The backend test suite is directly tied to MySQL. SQLite fallback testing is known to fail due to incompatible schema paradigms.
-- **Email Delivery Speed**: Real-time OTP dispatch speed relies entirely on Google's SMTP responsiveness. Under heavy loads, delivery may be delayed by a few seconds.
-- **Dependency Warnings**: Some React hooks trigger minor non-fatal dependency exhaustion warnings (`react-hooks/exhaustive-deps`) during strict linting runs.
+- Background email workers execute within the primary FastAPI process loop rather than a dedicated message queue (like Celery/Redis).
+- Rate-limiting middleware is currently implemented purely on the application layer for OTPs.
+
+## Future Improvements
+- Integrate Redis for robust task queuing and rate limiting.
+- Implement push notifications for the mobile application.
+- Add Oauth2 social login providers (Google/GitHub).
+
+## License
+MIT License.
+
+## Contribution Guidelines
+1. Fork the repository.
+2. Create your feature branch (git checkout -b feature/amazing-feature).
+3. Commit your changes (git commit -m 'Add some amazing feature').
+4. Push to the branch (git push origin feature/amazing-feature).
+5. Open a Pull Request.
