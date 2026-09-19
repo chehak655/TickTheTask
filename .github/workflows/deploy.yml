@@ -41,6 +41,10 @@ jobs:
         working-directory: ./web
         run: npm run build
         
+      - name: Copy index.html to 404.html
+        working-directory: ./web
+        run: cp dist/index.html dist/404.html
+        
       - name: Setup Pages
         uses: actions/configure-pages@v4
         
