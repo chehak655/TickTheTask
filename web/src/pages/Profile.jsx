@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { Mail, Calendar, ShieldCheck, LogOut, CheckCircle2, Sun, Moon, Laptop, Palette } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
@@ -159,12 +160,12 @@ export default function Profile() {
                   ? `Resend in ${resendCooldown}s`
                   : 'Resend Code'}
               </button>
-              <a
-                href={`/verify-email?email=${encodeURIComponent(user?.email || '')}`}
+              <Link
+                to={`/verify-email?email=${encodeURIComponent(user?.email || '')}`}
                 className="px-3 py-1.5 rounded-xl bg-white dark:bg-slate-800 border border-amber-300 dark:border-amber-700 text-amber-900 dark:text-amber-200 text-xs font-semibold hover:bg-amber-50 dark:hover:bg-slate-700 transition-colors"
               >
                 Enter Code (OTP)
-              </a>
+              </Link>
             </div>
           </div>
         )}

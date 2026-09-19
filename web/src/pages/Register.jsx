@@ -78,7 +78,7 @@ export default function Register() {
 
     if (result.success) {
       showToast('Account created! Please enter the 4-digit code sent to your email.', 'success');
-      navigate(`../verify-email?email=${encodeURIComponent(formData.email.trim())}`, { replace: true });
+      navigate(`/verify-email?email=${encodeURIComponent(formData.email.trim())}`, { replace: true });
     } else {
       setErrorMessage(result.error);
     }
