@@ -1,4 +1,4 @@
-// Web Notification & Audio Chime Service for TickTheTask Reminders
+﻿// Web Notification & Audio Chime Service for TickTheTask Reminders
 
 /**
  * Play a gentle, professional 2-tone notification chime using the Web Audio API.
@@ -84,9 +84,9 @@ export const sendDesktopNotification = (task, leadTimeText = 'soon') => {
   }
 
   try {
-    const title = `? Task Reminder: ${task.title}`;
+    const title = `Task Reminder: ${task.title}`;
     const options = {
-      body: `Due ${leadTimeText} � Priority: ${task.priority.toUpperCase()}`,
+      body: `Due ${leadTimeText} • Priority: ${task.priority.toUpperCase()}`,
       icon: '/favicon.ico',
       tag: `task-reminder-${task.id}-${task.reminder_minutes}`,
       renotify: true,
