@@ -92,7 +92,7 @@ export default function Register() {
           aria-label="TickTheTask Home"
           className="inline-flex items-center gap-2.5 mb-6 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400 rounded-2xl"
         >
-          <img src="/logo.jpg" alt="TickTheTask Logo" className="w-12 h-12 rounded-2xl object-cover bg-white shadow-xl shadow-primary-500/30" />
+          <img src={`${import.meta.env.BASE_URL}logo.jpg`} alt="TickTheTask Logo" className="w-12 h-12 rounded-2xl object-cover bg-white shadow-xl shadow-primary-500/30" />
           <span className="text-2xl font-black tracking-tight text-white">TickTheTask</span>
         </Link>
         <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">

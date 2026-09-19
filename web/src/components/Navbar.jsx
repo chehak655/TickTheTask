@@ -80,7 +80,7 @@ export default function Navbar({ onToggleSidebar }) {
           aria-label="TickTheTask Dashboard Home"
           className="flex items-center gap-2.5 rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2"
         >
-          <img src="/logo.jpg" alt="TickTheTask Logo" className="w-8 h-8 rounded-lg object-cover bg-white shadow-sm" />
+          <img src={`${import.meta.env.BASE_URL}logo.jpg`} alt="TickTheTask Logo" className="w-8 h-8 rounded-lg object-cover bg-white shadow-sm" />
           <span className="text-lg font-extrabold tracking-tight text-slate-900 dark:text-white hidden sm:inline">
             TickTheTask
           </span>
