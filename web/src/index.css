@@ -1,0 +1,111 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  /* Override Slate to pure Black, White, and Grays */
+  --color-slate-50: #ffffff;
+  --color-slate-100: #f5f5f5;
+  --color-slate-200: #e5e5e5;
+  --color-slate-300: #d4d4d4;
+  --color-slate-400: #a3a3a3;
+  --color-slate-500: #737373;
+  --color-slate-600: #525252;
+  --color-slate-700: #404040;
+  --color-slate-800: #262626;
+  --color-slate-900: #0a0a0a;
+  --color-slate-950: #000000;
+
+  --color-primary-50: var(--primary-50);
+  --color-primary-100: var(--primary-100);
+  --color-primary-200: var(--primary-200);
+  --color-primary-300: var(--primary-300);
+  --color-primary-400: var(--primary-400);
+  --color-primary-500: var(--primary-500);
+  --color-primary-600: var(--primary-600);
+  --color-primary-700: var(--primary-700);
+  --color-primary-800: var(--primary-800);
+  --color-primary-900: var(--primary-900);
+  --color-primary-950: var(--primary-950);
+}
+
+@layer base {
+  body {
+    @apply bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 antialiased font-sans min-h-screen transition-colors duration-150;
+  }
+
+  :root {
+    /* TickTheTask Lime Green (Matches new Logo) */
+    --primary-50: #f7fee7;
+    --primary-100: #ecfccb;
+    --primary-200: #d9f99d;
+    --primary-300: #bef264;
+    --primary-400: #a3e635;
+    --primary-500: #84cc16;
+    --primary-600: #65a30d;
+    --primary-700: #4d7c0f;
+    --primary-800: #3f6212;
+    --primary-900: #365314;
+    --primary-950: #1a2e05;
+  }
+
+  :root[data-color-theme="ocean-blue"] {
+    /* Ocean Blue */
+    --primary-50: #eef2ff;
+    --primary-100: #e0e7ff;
+    --primary-200: #c7d2fe;
+    --primary-300: #a5b4fc;
+    --primary-400: #818cf8;
+    --primary-500: #6366f1;
+    --primary-600: #4f46e5;
+    --primary-700: #4338ca;
+    --primary-800: #3730a3;
+    --primary-900: #312e81;
+    --primary-950: #1e1b4b;
+  }
+
+  :root[data-color-theme="emerald-green"] {
+    /* Emerald Green */
+    --primary-50: #ecfdf5;
+    --primary-100: #d1fae5;
+    --primary-200: #a7f3d0;
+    --primary-300: #6ee7b7;
+    --primary-400: #34d399;
+    --primary-500: #10b981;
+    --primary-600: #059669;
+    --primary-700: #047857;
+    --primary-800: #065f46;
+    --primary-900: #064e3b;
+    --primary-950: #022c22;
+  }
+
+  :root[data-color-theme="sunset-orange"] {
+    /* Sunset Orange (maps to orange/amber mix) */
+    --primary-50: #fff7ed;
+    --primary-100: #ffedd5;
+    --primary-200: #fed7aa;
+    --primary-300: #fdba74;
+    --primary-400: #fb923c;
+    --primary-500: #f97316;
+    --primary-600: #ea580c;
+    --primary-700: #c2410c;
+    --primary-800: #9a3412;
+    --primary-900: #7c2d12;
+    --primary-950: #431407;
+  }
+
+  :root[data-color-theme="royal-purple"] {
+    /* Royal Purple */
+    --primary-50: #faf5ff;
+    --primary-100: #f3e8ff;
+    --primary-200: #e9d5ff;
+    --primary-300: #d8b4fe;
+    --primary-400: #c084fc;
+    --primary-500: #a855f7;
+    --primary-600: #9333ea;
+    --primary-700: #7e22ce;
+    --primary-800: #6b21a8;
+    --primary-900: #581c87;
+    --primary-950: #3b0764;
+  }
+}
