@@ -49,8 +49,7 @@ export default function Login() {
 
     if (result.success) {
       showToast(`Welcome back, ${result.user?.name || 'User'}!`, 'success');
-      const safeFrom = from.startsWith("/") ? from.substring(1) : from;
-      navigate(`${import.meta.env.BASE_URL}${safeFrom}`.replace("//", "/"), { replace: true });
+      navigate(from, { replace: true });
     } else {
       setErrorMessage(result.error);
     }
