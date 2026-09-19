@@ -160,7 +160,7 @@ class Settings(BaseSettings):
     def get_database_url(self) -> str:
         """Returns the configured database URL or constructs one for MySQL."""
         if self.DATABASE_URL and len(self.DATABASE_URL.strip()) > 0:
-            return self.DATABASE_URL
+            return self.DATABASE_URL.replace('postgres://', 'postgresql://')
 
         # Build MySQL connection string with utf8mb4 encoding
         password_part = f":{self.DB_PASSWORD}" if self.DB_PASSWORD else ""
