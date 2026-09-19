@@ -1,4 +1,4 @@
-﻿# TickTheTask API Documentation
+# TickTheTask API Documentation
 
 The TickTheTask API is built with FastAPI. It auto-generates documentation via OpenAPI.
 

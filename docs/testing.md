@@ -1,4 +1,4 @@
-﻿# TickTheTask Testing Guide
+# TickTheTask Testing Guide
 
 ## Backend Tests
 The backend test suite is written using pytest.

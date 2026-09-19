@@ -1,4 +1,4 @@
-﻿# TickTheTask Architecture
+# TickTheTask Architecture
 
 ## High-Level Architecture
 TickTheTask is a full-stack, cross-platform task management application consisting of:

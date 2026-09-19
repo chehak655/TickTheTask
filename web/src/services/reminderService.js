@@ -1,4 +1,4 @@
-﻿// Web Notification & Audio Chime Service for TickTheTask Reminders
+// Web Notification & Audio Chime Service for TickTheTask Reminders
 
 /**
  * Play a gentle, professional 2-tone notification chime using the Web Audio API.

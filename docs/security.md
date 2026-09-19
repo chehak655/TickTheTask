@@ -1,4 +1,4 @@
-﻿# TickTheTask Security Practices
+# TickTheTask Security Practices
 
 ## Authentication & Authorization
 - **JWT (JSON Web Tokens):** Secure, stateless authentication. Tokens should be signed with a strong SECRET_KEY.
