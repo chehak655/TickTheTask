@@ -46,7 +46,7 @@ export default function StatsCard({
     <div
       className="p-5 rounded-2xl bg-white dark:bg-slate-800/90 border border-slate-200/80 dark:border-slate-700/60 shadow-2xs hover:shadow-md transition-shadow relative overflow-hidden flex flex-col h-full justify-between gap-4"
     >
-      <div className="flex items-start justify-between gap-3">
+      <div className="flex items-center justify-between gap-3">
         <p className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider leading-snug">
           {title}
         </p>
@@ -57,7 +57,7 @@ export default function StatsCard({
         )}
       </div>
       
-      <div>
+      <div className="mt-auto">
         <h4 className="text-3xl font-black text-slate-900 dark:text-white tracking-tight">
           {value ?? 0}
         </h4>
