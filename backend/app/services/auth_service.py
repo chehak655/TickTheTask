@@ -99,8 +99,10 @@ def register_user(db: Session, payload: UserRegisterRequest) -> User:
         dispatch_res = send_verification_otp_email(user, otp)
         if not dispatch_res.is_success:
             print(f"[!] Warning: Initial verification OTP email failed: {dispatch_res.message}")
+            print(f"[FALLBACK OTP] {user.email}: {otp}")
     except Exception as e:
         print(f"[!] Warning: Failed to send initial verification OTP email: {e}")
+        print(f"[FALLBACK OTP] {user.email}: {otp}")
 
     return user
 
@@ -209,8 +211,13 @@ def send_user_verification_otp(db: Session, user: User) -> tuple[bool, str, int]
     elif dispatch_res.status.value == "dev_mock":
         msg = "A 4-digit verification code has been simulated (Safe Dev Mode)."
     else:
-        msg = f"Failed to send email: {dispatch_res.message}"
-        return False, msg, cooldown
+        # Fallback for Render Free Tier SMTP blocking (OSError)
+        print(f"==================================================")
+        print(f"🚨 SMTP BLOCKED BY HOSTING PROVIDER? 🚨")
+        print(f"OTP FOR {user.email}: {otp}")
+        print(f"==================================================")
+        msg = "SMTP Blocked! Check your Render Dashboard Logs for the 4-digit OTP."
+        return True, msg, cooldown
 
     return True, msg, cooldown
 
