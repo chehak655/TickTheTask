@@ -1,5 +1,7 @@
 from typing import Optional
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Request,
+from app.core.rate_limit import limiter
+ Depends, HTTPException, status
 from sqlalchemy.orm import Session
 
 from app.database.session import get_db
@@ -44,7 +46,8 @@ router = APIRouter(prefix="/api/auth", tags=["Authentication"])
     status_code=status.HTTP_201_CREATED,
     summary="Register a new user account",
 )
-def register(payload: UserRegisterRequest, db: Session = Depends(get_db)):
+@limiter.limit('5/minute')
+def register(request: Request, payload: UserRegisterRequest, db: Session = Depends(get_db)):
     """
     Create a new user account with Gmail address validation.
     Generates a secure 4-digit OTP and dispatches a verification email.

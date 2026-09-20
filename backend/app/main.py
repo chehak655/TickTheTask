@@ -16,6 +16,10 @@ from app.routers import health
 from app.routers import auth
 from app.routers import tasks
 from app.routers import dashboard
+from slowapi import _rate_limit_exceeded_handler
+from slowapi.errors import RateLimitExceeded
+from app.core.rate_limit import limiter
+
 
 
 import logging
@@ -51,6 +55,10 @@ app = FastAPI(
 app.add_exception_handler(IntegrityError, integrity_error_handler)
 app.add_exception_handler(OperationalError, operational_error_handler)
 app.add_exception_handler(SQLAlchemyError, generic_db_error_handler)
+
+
+app.state.limiter = limiter
+app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
 app.add_middleware(
     CORSMiddleware,
