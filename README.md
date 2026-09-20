@@ -1,7 +1,5 @@
 # TickTheTask
 
-[![CI Status](https://github.com/chehak655/TickTheTask/actions/workflows/main.yml/badge.svg)](https://github.com/chehak655/TickTheTask/actions)
-
 **Plan it. Track it. Tick it off.**
 
 TickTheTask is a full-stack task-management application for organizing priorities, deadlines, schedules, and task progress through a React web interface and a FastAPI backend.
@@ -38,16 +36,19 @@ TickTheTask Backend is built using **FastAPI** and follows a modular architectur
 
 ## Live Demo
 
-- **Web application:** [https://chehak655.github.io/TickTheTask/](https://chehak655.github.io/TickTheTask/)
-- **Backend API documentation:** [https://tickthetask-backend.onrender.com/docs](https://tickthetask-backend.onrender.com/docs)
+**Web application:** [https://chehak655.github.io/TickTheTask/](https://chehak655.github.io/TickTheTask/)
 
 > **Note on Cold Starts:** The backend uses a free Render plan. If it has been inactive, the first request may take up to 60 seconds while the service wakes up. A loading spinner will appear in the web app during this time.
 
 ---
 
 ## Visuals
+<img width="1024" height="469" alt="login" src="https://github.com/user-attachments/assets/1a94cdb0-65a9-4aea-ae19-d8563d2cca85" />
+<img width="1024" height="480" alt="dashboard" src="https://github.com/user-attachments/assets/00cd5b0c-ecd2-424d-a5e4-63c861980d1c" />
+<img width="556" height="555" alt="task-creation" src="https://github.com/user-attachments/assets/3252d9fe-a36c-4cf4-96e9-d3f17056321a" />
+<img width="1024" height="472" alt="tasks" src="https://github.com/user-attachments/assets/2860bf10-8c0f-4674-9633-14791649105d" />
+<img width="1024" height="470" alt="calendar" src="https://github.com/user-attachments/assets/c3cd6028-22a2-43b7-aaa9-c52c619a30cc" />
 
-*(To embed screenshots directly, edit this README on GitHub.com and drag-and-drop your image files right here! GitHub will automatically host them and insert the image tags for you.)*
 
 ---
 
@@ -295,8 +296,6 @@ The test suite covers:
 - Deadline behavior
 - Security hardening
 
-*(Note: Ensure your test database is properly configured with a test engine URL to execute tests fully).*
-
 ---
 
 ## Deployment
@@ -320,12 +319,6 @@ For production deployment (Render):
 - CORS origins are strictly bounded in production.
 - Production environments enforce strong SECRET_KEY lengths.
 - Rate limiting is configured for authentication routes using SlowAPI.
-
----
-
-## Known Limitations
-
-- **Cold Starts:** The backend is hosted on Render's free tier. The first request after a period of inactivity may take up to 60 seconds.
 
 ---
 
