@@ -6,6 +6,9 @@ from datetime import datetime, timezone
 from typing import Optional
 from sqlalchemy import case, func, or_
 from sqlalchemy.orm import Session
+from sqlalchemy import func, or_
+from fastapi import HTTPException, status
+
 
 from app.models.task import Task, TaskStatus, TaskPriority, CompletionTiming
 from app.schemas.task import TaskCreate, TaskUpdate, DashboardStatsResponse
@@ -44,14 +47,17 @@ def classify_completion(due_date: Optional[datetime], completed_at: datetime) ->
 def create_task(db: Session, user_id: int, payload: TaskCreate) -> Task:
     """Create a new task belonging to the specified user."""
 
-    # Prevent duplicate tasks with the same title and due_date
-    existing_task = db.query(Task).filter(
+    # Prevent duplicate tasks with the same title (case-insensitive) and due_date
+    query = db.query(Task).filter(
         Task.user_id == user_id,
-        Task.title == payload.title,
-        Task.due_date == payload.due_date
-    ).first()
+        func.lower(Task.title) == func.lower(payload.title)
+    )
+    if payload.due_date:
+        existing_task = query.filter(func.date_trunc('minute', Task.due_date) == func.date_trunc('minute', payload.due_date)).first()
+    else:
+        existing_task = query.filter(Task.due_date.is_(None)).first()
+
     if existing_task:
-        from fastapi import HTTPException, status
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="A task with the same name and deadline already exists."
@@ -187,14 +193,17 @@ def update_task(db: Session, task: Task, payload: TaskUpdate) -> Task:
     new_due_date = payload.due_date if 'due_date' in update_data else task.due_date
     
     # Check if modifying to a duplicate
-    existing_task = db.query(Task).filter(
+    query = db.query(Task).filter(
         Task.user_id == task.user_id,
-        Task.title == new_title,
-        Task.due_date == new_due_date,
+        func.lower(Task.title) == func.lower(new_title),
         Task.id != task.id
-    ).first()
+    )
+    if new_due_date:
+        existing_task = query.filter(func.date_trunc('minute', Task.due_date) == func.date_trunc('minute', new_due_date)).first()
+    else:
+        existing_task = query.filter(Task.due_date.is_(None)).first()
+
     if existing_task:
-        from fastapi import HTTPException, status
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="A task with the same name and deadline already exists."
