@@ -16,7 +16,6 @@ import Dashboard from './pages/Dashboard';
 import Tasks from './pages/Tasks';
 import CalendarView from './pages/CalendarView';
 import Profile from './pages/Profile';
-import VerifyEmail from './pages/VerifyEmail';
 import NotFound from './pages/NotFound';
 
 export default function App() {
@@ -28,7 +27,6 @@ export default function App() {
             <ReminderProvider>
               <Routes>
                 {/* Public / Global routes */}
-                <Route path="/verify-email" element={<VerifyEmail />} />
 
                 {/* Public routes (accessible only when not logged in) */}
                 <Route element={<PublicRoute />}>
