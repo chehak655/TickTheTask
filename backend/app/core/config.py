@@ -29,25 +29,7 @@ class Settings(BaseSettings):
     ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 1440  # 24 hours
 
-    # Email & Verification Settings
-    FRONTEND_URL: str = "http://localhost:5173"
-    EMAIL_VERIFICATION_TOKEN_EXPIRE_HOURS: int = 24
-    RESEND_VERIFICATION_COOLDOWN_SECONDS: int = 60
 
-    # SMTP Configuration
-    SMTP_HOST: str = "smtp.gmail.com"
-    SMTP_PORT: int = 587
-    SMTP_USERNAME: str = ""
-    SMTP_PASSWORD: str = Field(
-        default="",
-        repr=False,
-        description="Google App Password or SMTP account password",
-    )
-    SMTP_FROM_EMAIL: str = ""
-    SMTP_FROM_NAME: str = "TickTheTask"
-    SMTP_TLS: bool = True
-    SMTP_TIMEOUT_SECONDS: int = 15
-    EMAIL_ENABLED: bool = False
 
     # Explicit allowed CORS origins for local and web clients
     BACKEND_CORS_ORIGINS: Union[List[str], str] = [
@@ -123,40 +105,6 @@ class Settings(BaseSettings):
 
         return self
 
-    def get_email_mode(self) -> str:
-        """
-        Identify active email mode:
-        - 'real_smtp': EMAIL_ENABLED is True and both username and password are provided.
-        - 'misconfigured': EMAIL_ENABLED is True but credentials are missing.
-        - 'safe_dev_mode': EMAIL_ENABLED is False.
-        """
-        if not self.EMAIL_ENABLED:
-            return "safe_dev_mode"
-        if bool(self.SMTP_USERNAME.strip()) and bool(self.SMTP_PASSWORD.strip()):
-            return "real_smtp"
-        return "misconfigured"
-
-    def get_safe_smtp_diagnostics(self) -> dict:
-        """Returns non-sensitive metadata about the SMTP configuration."""
-        username = self.SMTP_USERNAME.strip()
-        masked_user = (
-            f"{username[:3]}...@{username.split('@')[-1]}"
-            if "@" in username and len(username) > 6
-            else ("configured" if username else "not_configured")
-        )
-        return {
-            "email_enabled": self.EMAIL_ENABLED,
-            "email_mode": self.get_email_mode(),
-            "smtp_host": self.SMTP_HOST,
-            "smtp_port": self.SMTP_PORT,
-            "smtp_tls": self.SMTP_TLS,
-            "smtp_timeout_seconds": self.SMTP_TIMEOUT_SECONDS,
-            "smtp_user": masked_user,
-            "smtp_password_configured": bool(self.SMTP_PASSWORD.strip()),
-            "from_email": self.SMTP_FROM_EMAIL or self.SMTP_USERNAME,
-            "from_name": self.SMTP_FROM_NAME,
-        }
-
     def get_database_url(self) -> str:
         """Returns the configured database URL or constructs one for PostgreSQL."""
         if self.DATABASE_URL and len(self.DATABASE_URL.strip()) > 0:
@@ -176,4 +124,5 @@ class Settings(BaseSettings):
 
 
 settings = Settings()
+
 
