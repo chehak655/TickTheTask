@@ -90,7 +90,7 @@ export const sendDesktopNotification = (task, leadTimeText = 'soon') => {
       icon: '/favicon.ico',
       tag: `task-reminder-${task.id}-${task.reminder_minutes}`,
       renotify: true,
-      requireInteraction: false,
+      requireInteraction: true,
     };
 
     const notification = new Notification(title, options);
@@ -121,3 +121,4 @@ export const formatLeadTime = (minutes) => {
   const hours = Math.round(minutes / 60);
   return `in ${hours} hour${hours > 1 ? 's' : ''}`;
 };
+

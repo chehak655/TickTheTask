@@ -43,6 +43,20 @@ def classify_completion(due_date: Optional[datetime], completed_at: datetime) ->
 
 def create_task(db: Session, user_id: int, payload: TaskCreate) -> Task:
     """Create a new task belonging to the specified user."""
+
+    # Prevent duplicate tasks with the same title and due_date
+    existing_task = db.query(Task).filter(
+        Task.user_id == user_id,
+        Task.title == payload.title,
+        Task.due_date == payload.due_date
+    ).first()
+    if existing_task:
+        from fastapi import HTTPException, status
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="A task with the same name and deadline already exists."
+        )
+
     now_utc = datetime.now(timezone.utc)
     
     # If created directly with status == 'completed'
@@ -168,6 +182,24 @@ def get_task_by_id(db: Session, task_id: int) -> Optional[Task]:
 def update_task(db: Session, task: Task, payload: TaskUpdate) -> Task:
     """Update editable fields of an existing task with completion status synchronization."""
     update_data = payload.model_dump(exclude_unset=True)
+
+    new_title = payload.title if payload.title is not None else task.title
+    new_due_date = payload.due_date if 'due_date' in update_data else task.due_date
+    
+    # Check if modifying to a duplicate
+    existing_task = db.query(Task).filter(
+        Task.user_id == task.user_id,
+        Task.title == new_title,
+        Task.due_date == new_due_date,
+        Task.id != task.id
+    ).first()
+    if existing_task:
+        from fastapi import HTTPException, status
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="A task with the same name and deadline already exists."
+        )
+
     now_utc = datetime.now(timezone.utc)
 
     # Check status transition
