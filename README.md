@@ -9,6 +9,9 @@ TickTheTask backend is built utilizing the FastAPI framework, while also adoptin
 
 ## Project Structure
 
+
+
+
 TickTheTask/
 ├── .github/
 │   └── workflows/          # GitHub Actions CI/CD workflows
