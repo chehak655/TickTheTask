@@ -22,7 +22,7 @@ import NotFound from './pages/NotFound';
 export default function App() {
   return (
     <ThemeProvider>
-      <BrowserRouter basename={import.meta.env.BASE_URL}>
+      <BrowserRouter basename={import.meta.env.BASE_URL.replace(/\/$/, '')}>
         <ToastProvider>
           <AuthProvider>
             <ReminderProvider>
