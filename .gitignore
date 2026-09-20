@@ -62,6 +62,8 @@ web-build/
 
 # Environment variables & secrets
 .env
+.env.*
+!.env.example
 .env.local
 .env.development.local
 .env.test.local

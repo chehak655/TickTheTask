@@ -7,7 +7,7 @@ services:
     restart: always
     environment:
       POSTGRES_USER: tickthetask
-      POSTGRES_PASSWORD: your_postgres_password_here
+      POSTGRES_PASSWORD: your_password
       POSTGRES_DB: tickthetask_db
     ports:
       - "5432:5432"
