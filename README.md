@@ -65,26 +65,24 @@ Web application: [https://chehak655.github.io/TickTheTask/](https://chehak655.gi
 ## Application Architecture
 
 ```text
-┌─────────────────────────────┐
-│     Web Client     │
-└──────────────┬──────────────┘
-│ HTTP Requests
-▼
-┌─────────────────────────────┐
-│    FastAPI Routes    │
-└──────────────┬──────────────┘
-▼
-┌─────────────────────────────┐
-│    Service Layer     │
-└──────────────┬──────────────┘
-▼
-┌─────────────────────────────┐
-│   SQLAlchemy ORM     │
-└──────────────┬──────────────┘
-▼
-┌─────────────────────────────┐
-│    PostgreSQL      │
-└─────────────────────────────┘
+                    ┌────────────────────────┐
+                    │      GitHub Pages      │
+                    │   (React Front-End)    │
+                    └───────────┬────────────┘
+                                │
+                                │ REST API (HTTPS)
+                                ▼
+                    ┌────────────────────────┐
+                    │     Render Cloud       │
+                    │   (FastAPI Backend)    │
+                    └───────────┬────────────┘
+                                │
+                                │ SQLAlchemy ORM
+                                ▼
+                    ┌────────────────────────┐
+                    │    Render Database     │
+                    │ (PostgreSQL Database)  │
+                    └────────────────────────┘
 ```
 ---
 
