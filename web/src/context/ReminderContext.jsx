@@ -64,50 +64,44 @@ export function ReminderProvider({ children }) {
 
       tasks.forEach((task) => {
         if (!task.due_date) return;
-        const reminderMins = task.reminder_minutes !== undefined && task.reminder_minutes !== null ? task.reminder_minutes : 15;
-        if (reminderMins === null || reminderMins === undefined) return;
-
         const dueTimestamp = parseUtcDate(task.due_date)?.getTime();
         if (!dueTimestamp || isNaN(dueTimestamp)) return;
 
-        // Reminder threshold: [dueDate - reminderMins*60*1000] up to dueDate + 5 mins
-        const triggerTime = dueTimestamp - reminderMins * 60 * 1000;
-        const taskKey = `${task.id}-${task.reminder_minutes}-${dueTimestamp}`;
+        // The user wants pre-deadline reminder (task.reminder_minutes) and exactly at due time (0).
+        const preferredLead = task.reminder_minutes !== undefined && task.reminder_minutes !== null ? task.reminder_minutes : 15;
+        const leadTimes = [preferredLead, 0];
 
-        // Check if task is within reminder window and hasn't been notified yet
-        if (now >= triggerTime && now <= dueTimestamp + 5 * 60 * 1000) {
-          if (!notifiedTasksRef.current.has(taskKey)) {
-            notifiedTasksRef.current.add(taskKey);
+        leadTimes.forEach((leadMins) => {
+          const triggerTime = dueTimestamp - leadMins * 60 * 1000;
+          const taskKey = `${task.id}-lead-${leadMins}`;
 
-            const minutesLeft = Math.max(0, Math.round((dueTimestamp - now) / (60 * 1000)));
-            const leadText = minutesLeft === 0 ? 'right now' : formatLeadTime(minutesLeft);
+          // Check if task is within reminder window and hasn't been notified yet
+          if (now >= triggerTime && now <= dueTimestamp + 5 * 60 * 1000) {
+            if (!notifiedTasksRef.current.has(taskKey)) {
+              notifiedTasksRef.current.add(taskKey);
 
-            // 1. Audio chime
-            if (soundEnabled) {
-              playReminderSound();
+              const minutesLeft = Math.max(0, Math.round((dueTimestamp - now) / (60 * 1000)));
+              const leadText = minutesLeft === 0 ? 'right now' : formatLeadTime(minutesLeft);
+
+              if (soundEnabled) playReminderSound();
+              sendDesktopNotification(task, leadText);
+              showToast(`⏰ Reminder: "${task.title}" is due ${leadText}!`, 'info', 6000);
+
+              setActiveAlerts((prev) => [
+                {
+                  id: `${task.id}-${leadMins}`,
+                  title: task.title,
+                  priority: task.priority,
+                  due_date: task.due_date,
+                  leadText,
+                  timestamp: new Date(),
+                  read: false,
+                },
+                ...prev.slice(0, 19),
+              ]);
             }
-
-            // 2. Desktop notification
-            sendDesktopNotification(task, leadText);
-
-            // 3. In-app toast
-            showToast(`? Reminder: "${task.title}" is due ${leadText}!`, 'info', 6000);
-
-            // 4. Record to active alerts
-            setActiveAlerts((prev) => [
-              {
-                id: task.id,
-                title: task.title,
-                priority: task.priority,
-                due_date: task.due_date,
-                leadText,
-                timestamp: new Date(),
-                read: false,
-              },
-              ...prev.slice(0, 19), // keep last 20
-            ]);
           }
-        }
+        });
       });
     } catch (err) {
       // Silently catch background polling errors
@@ -124,7 +118,7 @@ export function ReminderProvider({ children }) {
     }
 
     checkReminders();
-        // intervalRef.current = setInterval(checkReminders, 15000);
+    intervalRef.current = setInterval(checkReminders, 15000);
 
     return () => {
       if (intervalRef.current) clearInterval(intervalRef.current);

@@ -66,24 +66,12 @@ def register_user(db: Session, payload: UserRegisterRequest) -> User:
         raise DuplicateResourceError("An account with this email address already exists.")
 
     now_utc = datetime.now(timezone.utc)
-    token = generate_verification_token()
-    otp = generate_otp()
-    otp_hash = hash_password(otp)
-    otp_expires_at = now_utc + timedelta(minutes=10)
-    legacy_expires_at = now_utc + timedelta(hours=settings.EMAIL_VERIFICATION_TOKEN_EXPIRE_HOURS)
 
     user = User(
         name=payload.name.strip(),
         email=normalised_email,
         password_hash=hash_password(payload.password),
-        is_email_verified=False,
-        email_verification_token=token,
-        email_verification_expires_at=legacy_expires_at,
-        last_verification_sent_at=now_utc,
-        verification_otp_hash=otp_hash,
-        verification_otp_expires_at=otp_expires_at,
-        verification_otp_attempts=0,
-        verification_otp_last_sent_at=now_utc,
+        is_email_verified=True,
     )
 
     try:
@@ -93,10 +81,6 @@ def register_user(db: Session, payload: UserRegisterRequest) -> User:
     except IntegrityError:
         db.rollback()
         raise DuplicateResourceError("An account with this email address already exists.")
-
-    except Exception as e:
-        print(f"[!] Warning: Failed to send initial verification OTP email: {e}")
-        print(f"[FALLBACK OTP] {user.email}: {otp}")
 
     return user
 
@@ -278,3 +262,4 @@ def authenticate_user(db: Session, email: str, password: str) -> Optional[User]:
 def create_user_token(user: User) -> str:
     """Issue a signed JWT access token for *user*."""
     return create_access_token(subject=user.id)
+
