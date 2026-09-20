@@ -9,21 +9,14 @@ TickTheTask backend is built utilizing the FastAPI framework, while also adoptin
 
 ## Project Structure
 
-
-
-
+```text
 TickTheTask/
 ├── .github/
 │   └── workflows/          # GitHub Actions CI/CD workflows
-│
 ├── backend/                # FastAPI Python backend
-│
 ├── web/                    # React + Vite web application
-│
 ├── docs/                   # Project documentation
-│
 ├── scripts/                # Helper and deployment scripts
-│
 ├── .env.example            # Environment variable template
 ├── .gitignore              # Git ignore rules
 ├── CONTRIBUTING.md         # Contribution guidelines
@@ -31,7 +24,7 @@ TickTheTask/
 ├── LICENSE                 # MIT License
 ├── render.yaml             # Render deployment configuration
 └── README.md               # Project documentation
-
+```
 ## Features
 
 - JWT-based authentication and registration
