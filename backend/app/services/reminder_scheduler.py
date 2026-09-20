@@ -45,53 +45,64 @@ def check_and_send_due_reminders(db: Session) -> int:
         if due_date_utc.tzinfo is None:
             due_date_utc = due_date_utc.replace(tzinfo=timezone.utc)
 
-        lead_minutes = task.reminder_minutes
-        trigger_time = due_date_utc - timedelta(minutes=lead_minutes)
+        # The user wants a pre-deadline reminder (defaults to 15), and another exactly when overdue (0).
+        preferred_lead = task.reminder_minutes if task.reminder_minutes is not None else 15
+        lead_times_to_check = list(set([preferred_lead, 0]))
 
-        # Trigger if current time has passed the trigger time, but strictly before the due date.
-        # This prevents sending pre-deadline reminders for tasks that are already overdue.
-        if trigger_time <= now_utc <= due_date_utc:
-            # Check if this reminder was already dispatched
-            existing_log = (
-                db.query(TaskReminderLog)
-                .filter(
-                    TaskReminderLog.task_id == task.id,
-                    TaskReminderLog.reminder_minutes == lead_minutes,
+        for lead_minutes in lead_times_to_check:
+            trigger_time = due_date_utc - timedelta(minutes=lead_minutes)
+
+            # Trigger if current time has passed the trigger time
+            # For lead_minutes > 0, we only trigger if we are strictly before the due date (pre-deadline).
+            # For lead_minutes == 0, we trigger if now >= due_date_utc.
+            is_triggered = False
+            if lead_minutes > 0:
+                is_triggered = trigger_time <= now_utc <= due_date_utc
+            else:
+                is_triggered = now_utc >= due_date_utc
+
+            if is_triggered:
+                # Check if this reminder was already dispatched
+                existing_log = (
+                    db.query(TaskReminderLog)
+                    .filter(
+                        TaskReminderLog.task_id == task.id,
+                        TaskReminderLog.reminder_minutes == lead_minutes,
+                    )
+                    .first()
                 )
-                .first()
-            )
 
-            if existing_log:
-                continue
+                if existing_log:
+                    continue
 
-            # Record log entry to prevent race condition duplicates
-            log_entry = TaskReminderLog(
-                task_id=task.id,
-                user_id=task.user_id,
-                reminder_minutes=lead_minutes,
-                status="sent",
-            )
-            
-            try:
-                db.add(log_entry)
-                db.commit()
-                db.refresh(log_entry)
-
-                # Send email
-                success = send_task_reminder_email(task.user, task, lead_minutes)
-                if not success:
-                    log_entry.status = "failed"
-                    log_entry.error_message = "SMTP delivery failure"
+                # Record log entry to prevent race condition duplicates
+                log_entry = TaskReminderLog(
+                    task_id=task.id,
+                    user_id=task.user_id,
+                    reminder_minutes=lead_minutes,
+                    status="sent",
+                )
+                
+                try:
+                    db.add(log_entry)
                     db.commit()
-                else:
-                    sent_count += 1
-            except IntegrityError:
-                # Another worker processed this reminder at the exact same time
-                db.rollback()
-                logger.debug(f"IntegrityError: Reminder for task {task.id} already processed by another worker.")
-            except Exception as e:
-                db.rollback()
-                logger.error(f"Error processing reminder for task {task.id}: {e}", exc_info=True)
+                    db.refresh(log_entry)
+
+                    # Send email
+                    success = send_task_reminder_email(task.user, task, lead_minutes)
+                    if not success:
+                        log_entry.status = "failed"
+                        log_entry.error_message = "SMTP delivery failure"
+                        db.commit()
+                    else:
+                        sent_count += 1
+                except IntegrityError:
+                    # Another worker processed this reminder at the exact same time
+                    db.rollback()
+                    logger.debug(f"IntegrityError: Reminder for task {task.id} already processed by another worker.")
+                except Exception as e:
+                    db.rollback()
+                    logger.error(f"Error processing reminder for task {task.id}: {e}", exc_info=True)
 
     return sent_count
 

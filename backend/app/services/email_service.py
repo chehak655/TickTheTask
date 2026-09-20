@@ -248,22 +248,32 @@ def send_task_reminder_email(user: User, task: Task, reminder_minutes: int) -> E
     """
     due_str = task.due_date.strftime("%B %d, %Y at %H:%M UTC") if task.due_date else "soon"
     
-    if reminder_minutes >= 1440:
-        lead_time_str = f"{reminder_minutes // 1440} day(s)"
-    elif reminder_minutes >= 60:
-        lead_time_str = f"{reminder_minutes // 60} hour(s)"
+    if reminder_minutes == 0:
+        subject = f"Action Required: '{task.title}' is now OVERDUE!"
+        header_text = "Task Overdue"
+        lead_phrase = "is now <strong>OVERDUE</strong>!"
+        text_lead_phrase = "is now OVERDUE!"
     else:
-        lead_time_str = f"{reminder_minutes} minutes"
-
-    subject = f"Reminder: '{task.title}' is due in {lead_time_str}"
+        if reminder_minutes >= 1440:
+            lead_time_str = f"{reminder_minutes // 1440} day(s)"
+        elif reminder_minutes >= 60:
+            lead_time_str = f"{reminder_minutes // 60} hour(s)"
+        else:
+            lead_time_str = f"{reminder_minutes} minutes"
+            
+        subject = f"Reminder: '{task.title}' is due in {lead_time_str}"
+        header_text = "Task Deadline Approaching"
+        lead_phrase = f"is due in <strong>{lead_time_str}</strong>."
+        text_lead_phrase = f"is due in {lead_time_str}."
     
     text_body = f"""Hello {user.name},
 
-This is a reminder from TickTheTask for your upcoming task:
+This is a reminder from TickTheTask for your task:
 
 Task: {task.title}
 Priority: {task.priority.capitalize()}
-Due Date: {due_str} ({lead_time_str} from now)
+Due Date: {due_str}
+Status: {text_lead_phrase}
 Description: {task.description or 'No description provided.'}
 
 View and complete your task at: {settings.FRONTEND_URL}/tasks
@@ -277,8 +287,8 @@ View and complete your task at: {settings.FRONTEND_URL}/tasks
       <h2 style="color: #4f46e5; margin: 0; font-size: 22px; font-weight: 800;">TickTheTask</h2>
       <span style="margin-left: auto; background: #eef2ff; color: #4338ca; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 700;">{task.priority.upper()} PRIORITY</span>
     </div>
-    <h3 style="color: #0f172a; margin-top: 0;">Task Deadline Approaching</h3>
-    <p style="color: #475569; font-size: 14px;">Your task <strong>"{task.title}"</strong> is due in <strong>{lead_time_str}</strong>.</p>
+    <h3 style="color: {'#e11d48' if reminder_minutes == 0 else '#0f172a'}; margin-top: 0;">{header_text}</h3>
+    <p style="color: #475569; font-size: 14px;">Your task <strong>"{task.title}"</strong> {lead_phrase}</p>
     
     <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 16px; margin: 20px 0;">
       <p style="margin: 0 0 8px; font-size: 13px; color: #64748b;"><strong>Deadline:</strong> {due_str}</p>
