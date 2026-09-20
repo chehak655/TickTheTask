@@ -94,12 +94,6 @@ def register_user(db: Session, payload: UserRegisterRequest) -> User:
         db.rollback()
         raise DuplicateResourceError("An account with this email address already exists.")
 
-    # Dispatch verification OTP email (non-blocking for registration flow)
-    try:
-        dispatch_res = send_verification_otp_email(user, otp)
-        if not dispatch_res.is_success:
-            print(f"[!] Warning: Initial verification OTP email failed: {dispatch_res.message}")
-            print(f"[FALLBACK OTP] {user.email}: {otp}")
     except Exception as e:
         print(f"[!] Warning: Failed to send initial verification OTP email: {e}")
         print(f"[FALLBACK OTP] {user.email}: {otp}")

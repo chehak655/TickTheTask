@@ -16,8 +16,6 @@ from app.routers import health
 from app.routers import auth
 from app.routers import tasks
 from app.routers import dashboard
-from app.routers import email
-from app.services.reminder_scheduler import reminder_scheduler_loop
 
 
 import logging
@@ -35,29 +33,8 @@ async def lifespan(app: FastAPI):
     except Exception as e:
         logger.error(f"Database connection failed on startup: {e}")
 
-    # Email Delivery Mode diagnostics (credentials are masked)
-    email_mode = settings.get_email_mode()
-    if email_mode == "real_smtp":
-        logger.info(f"Email Engine: REAL GMAIL SMTP ACTIVE ({settings.SMTP_HOST}:{settings.SMTP_PORT}, TLS={settings.SMTP_TLS}).")
-    elif email_mode == "misconfigured":
-        logger.warning(f"Email Engine: EMAIL_ENABLED is True, but SMTP_PASSWORD is not set. Operating in Safe Dev Mode.")
-    else:
-        logger.info(f"Email Engine: SAFE DEV MODE (simulated email dispatch).")
-
-    # Start background reminder scheduler worker
-    reminder_task = None
-    if settings.ENVIRONMENT != "testing":
-        reminder_task = asyncio.create_task(reminder_scheduler_loop(poll_interval_seconds=30))
-
     yield
 
-    # Cancel background worker cleanly on shutdown
-    if reminder_task:
-        reminder_task.cancel()
-        try:
-            await reminder_task
-        except asyncio.CancelledError:
-            pass
     logger.info(f"Shutting down {settings.PROJECT_NAME}...")
 
 
@@ -98,10 +75,6 @@ app.include_router(health.router, prefix=settings.API_V1_STR)
 
 # Auth: /api/auth/register, /api/auth/login, /api/auth/me, /api/auth/verify-email, /api/auth/resend-verification
 app.include_router(auth.router)
-
-# Email diagnostics: /api/email/test and /api/v1/email/test
-app.include_router(email.router)
-app.include_router(email.router, prefix=settings.API_V1_STR)
 
 # Tasks: /api/tasks (CRUD, calendar, filters, search, sort, pagination)
 app.include_router(tasks.router)

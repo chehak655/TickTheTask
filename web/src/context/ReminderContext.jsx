@@ -124,7 +124,7 @@ export function ReminderProvider({ children }) {
     }
 
     checkReminders();
-    intervalRef.current = setInterval(checkReminders, 15000);
+        // intervalRef.current = setInterval(checkReminders, 15000);
 
     return () => {
       if (intervalRef.current) clearInterval(intervalRef.current);

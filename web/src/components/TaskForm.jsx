@@ -254,38 +254,7 @@ export default function TaskForm({ isOpen, onClose, onSubmit, initialData = null
             />
           </div>
 
-          {/* Reminder Selector (active when Due Date is specified) */}
-          {formData.due_date && (
-            <div className="p-3.5 rounded-xl bg-primary-50/60 dark:bg-primary-950/40 border border-primary-100 dark:border-primary-900/50 animate-in fade-in slide-in-from-top-1">
-              <label
-                htmlFor="task-reminder"
-                className="flex items-center gap-1.5 text-xs font-semibold text-primary-900 dark:text-primary-200 uppercase tracking-wider mb-1.5"
-              >
-                <Bell className="w-3.5 h-3.5 text-primary-600 dark:text-primary-400" />
-                Remind Me Before Due Date
-              </label>
-              <select
-                id="task-reminder"
-                value={formData.reminder_minutes}
-                onChange={(e) =>
-                  setFormData({
-                    ...formData,
-                    reminder_minutes: e.target.value === '' ? '' : Number(e.target.value),
-                  })
-                }
-                className="w-full px-3 py-2 text-sm bg-white dark:bg-slate-900 border border-primary-200 dark:border-primary-800 rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500/20 focus:border-primary-500 text-slate-900 dark:text-white transition-all font-medium"
-              >
-                <option value={15}>15 minutes before (Recommended)</option>
-                <option value={5}>5 minutes before</option>
-                <option value={30}>30 minutes before</option>
-                <option value={60}>1 hour before</option>
-                <option value={120}>2 hours before</option>
-                <option value={1440}>1 day before</option>
-                <option value={0}>At the exact due time</option>
-                <option value="">No reminder</option>
-              </select>
-            </div>
-          )}
+
 
           {/* Form Actions */}
           <div className="flex items-center justify-end gap-3 pt-4 border-t border-slate-100 dark:border-slate-700/60 mt-6">
