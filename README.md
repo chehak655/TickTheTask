@@ -258,7 +258,7 @@ python -m alembic downgrade -1
 ## API Documentation
 FastAPI will generally expose:
 
-- Swagger UI: `http://127.0.0.1:8000/docs`
+- Swagger UI: `http://127.0.0.1:8000/api/v1/docs`
 - ReDoc: `http://127.0.0.1:8000/redoc`
 - OpenAPI schema: `http://127.0.0.1:8000/openapi.json`
 ---
