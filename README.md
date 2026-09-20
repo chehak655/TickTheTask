@@ -33,21 +33,6 @@ TickTheTask/
 - Search, filtering by status and priorities
 - Isolated data by user
 
-## Feature Implementation Status
-
-- [x] JWT-based authentication and registration
-- [x] Task management
-- [x] Deadline and calendar-based tracking
-- [x] Search, filtering, priorities and statuses
-- [x] Data isolation
-- [ ] Categories and tags (Planned)
-- [ ] Subtasks (Planned)
-- [ ] Recurring Tasks (Planned)
-- [ ] Offline synchronization (Planned)
-- [ ] Push notifications (Planned)
-- [ ] Advanced productivity analytics (Planned)
----
-
 ## Live Demo
 
 Web application: [https://chehak655.github.io/TickTheTask/](https://chehak655.github.io/TickTheTask/)
