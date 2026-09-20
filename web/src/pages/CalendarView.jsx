@@ -170,7 +170,7 @@ export default function CalendarView() {
       setEditingTask(null);
       loadCalendarTasks();
     } catch (err) {
-      showToast('Failed to save task.', 'error');
+      showToast(err.response?.data?.detail || 'Failed to save task.', 'error');
     } finally {
       setIsSubmitting(false);
     }
