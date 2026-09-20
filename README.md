@@ -1,4 +1,5 @@
 # TickTheTask
+
 TickTheTask is a full-stack task-management application to help organize priorities, deadlines, schedules and task progress via a React web interface and a FastAPI backend.
 ---
 
