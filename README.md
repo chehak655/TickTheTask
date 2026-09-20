@@ -19,7 +19,12 @@ TickTheTask is a comprehensive, full-stack task management application designed 
 > **Note on Cold Starts:** The backend is hosted on a free Render tier. If the app hasn't been used in a while, the very first API request may take up to 60 seconds as the server wakes up. A loading screen will appear in the web app during this time.
 
 ## Visuals
-*(To embed screenshots directly without making a folder, just edit this README on GitHub.com and drag-and-drop your image files right here! GitHub will automatically host them and insert the image tags for you.)*
+<img width="1024" height="469" alt="login" src="https://github.com/user-attachments/assets/0376a4b3-dd29-4ff0-b7b7-7b6c4bef3c7b" />
+<img width="1024" height="480" alt="dashboard" src="https://github.com/user-attachments/assets/efb41a5c-9bd9-43c4-a3f2-478437f1f380" />
+<img width="556" height="555" alt="task-creation" src="https://github.com/user-attachments/assets/d2abe1bb-698e-420c-a286-d83b4ff84fa2" />
+<img width="1024" height="472" alt="tasks" src="https://github.com/user-attachments/assets/a8fad3fe-8b17-4902-ae9f-a19c4b597621" />
+<img width="1024" height="470" alt="calendar" src="https://github.com/user-attachments/assets/791c8896-36ca-44d8-8b55-90f28452eda6" />
+
 
 ## Tech Stack
 **Web:** React 18, Vite, Tailwind CSS v4, Lucide React
