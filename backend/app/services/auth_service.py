@@ -13,7 +13,6 @@ from app.models.user import User
 from app.schemas.user import UserRegisterRequest
 from app.core.security import hash_password, verify_password, create_access_token
 from app.core.exceptions import DuplicateResourceError
-from app.services.email_service import send_verification_email, send_verification_otp_email
 
 
 # ---------------------------------------------------------------------------
@@ -262,4 +261,5 @@ def authenticate_user(db: Session, email: str, password: str) -> Optional[User]:
 def create_user_token(user: User) -> str:
     """Issue a signed JWT access token for *user*."""
     return create_access_token(subject=user.id)
+
 
