@@ -10,57 +10,6 @@ export default function ProfileScreen() {
   const { user, logout, refreshUser } = useAuth();
   const { themeMode, setThemeMode, colors, isDark, colorTheme, setColorTheme } = useTheme();
   const [stats, setStats] = useState(null);
-  const [isSending, setIsSending] = useState(false);
-  const [isVerifying, setIsVerifying] = useState(false);
-  const [cooldown, setCooldown] = useState(0);
-  const [showTokenInput, setShowTokenInput] = useState(false);
-  const [otpToken, setOtpToken] = useState('');
-
-  // cooldown timer logic
-  useEffect(() => {
-    let timer;
-    if (cooldown > 0) {
-      timer = setInterval(() => {
-        setCooldown((prev) => (prev > 0 ? prev - 1 : 0));
-      }, 1000);
-    }
-    return () => clearInterval(timer);
-  }, [cooldown]);
-
-  const handleSendVerification = async () => {
-    if (!user?.email) return;
-    setIsSending(true);
-    try {
-      const data = await authService.resendVerificationOtp(user.email);
-      Alert.alert('Verification Sent', data.message || 'Check your email for the code.');
-      setCooldown(data.cooldown_seconds || 60);
-      setShowTokenInput(true);
-    } catch (e) {
-      const msg = e.response?.data?.detail || 'Failed to send code.';
-      Alert.alert('Error', msg);
-    } finally {
-      setIsSending(false);
-    }
-  };
-
-  const handleVerifyOTP = async () => {
-    if (!otpToken || otpToken.length !== 4) {
-      Alert.alert('Invalid', 'Please enter a valid 4-digit code.');
-      return;
-    }
-    setIsVerifying(true);
-    try {
-      await authService.verifyEmailOtp({ token: otpToken });
-      Alert.alert('Success', 'Email verified successfully!');
-      setShowTokenInput(false);
-      await refreshUser();
-    } catch (e) {
-      const msg = e.response?.data?.detail || 'Verification failed.';
-      Alert.alert('Error', msg);
-    } finally {
-      setIsVerifying(false);
-    }
-  };
 
   useEffect(() => {
     const fetchStats = async () => {
@@ -203,85 +152,9 @@ export default function ProfileScreen() {
             <Text style={[styles.infoLabel, { color: colors.textMuted }]}>Email</Text>
             <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6, marginTop: 2 }}>
               <Text style={[styles.infoValue, { color: colors.text, marginTop: 0 }]}>{user?.email || 'N/A'}</Text>
-              {user?.is_email_verified ? (
-                <View style={[styles.verifiedBadge, { backgroundColor: isDark ? '#064e3b' : '#ecfdf5', borderColor: isDark ? '#047857' : '#a7f3d0' }]}>
-                  <Ionicons name="checkmark-circle" size={12} color={isDark ? '#6ee7b7' : '#059669'} />
-                  <Text style={[styles.verifiedText, { color: isDark ? '#6ee7b7' : '#059669' }]}>Verified</Text>
-                </View>
-              ) : (
-                <View style={[styles.verifiedBadge, { backgroundColor: isDark ? '#451a03' : '#fffbeb', borderColor: isDark ? '#b45309' : '#fde68a' }]}>
-                  <Ionicons name="alert-circle" size={12} color={isDark ? '#fcd34d' : '#d97706'} />
-                  <Text style={[styles.verifiedText, { color: isDark ? '#fcd34d' : '#d97706' }]}>Unverified</Text>
-                </View>
-              )}
             </View>
           </View>
         </View>
-
-        {/* Verification banner if unverified */}
-        {!user?.is_email_verified && (
-          <View style={[styles.unverifiedBox, { backgroundColor: isDark ? '#261805' : '#fffbeb', borderColor: isDark ? '#78350f' : '#fde68a' }]}>
-            <Text style={[styles.unverifiedTitle, { color: isDark ? '#fde68a' : '#92400e' }]}>
-              Verify your Gmail for email reminders
-            </Text>
-            <Text style={[styles.unverifiedDesc, { color: isDark ? '#fef3c7' : '#b45309' }]}>
-              Task deadline reminders (24h, 1h, 15m) require a verified Gmail address.
-            </Text>
-
-            <View style={styles.unverifiedActionsRow}>
-              <TouchableOpacity
-                style={[styles.resendBtn, { opacity: isSending || cooldown > 0 ? 0.6 : 1 }]}
-                onPress={handleResend}
-                disabled={isSending || cooldown > 0}
-                activeOpacity={0.8}
-              >
-                {isSending ? (
-                  <ActivityIndicator size="small" color="#ffffff" />
-                ) : (
-                  <Text style={styles.resendBtnText}>
-                    {cooldown > 0 ? `Resend (${cooldown}s)` : 'Send Code'}
-                  </Text>
-                )}
-              </TouchableOpacity>
-
-              <TouchableOpacity
-                style={[styles.enterTokenBtn, { borderColor: isDark ? '#b45309' : '#d97706' }]}
-                onPress={() => setShowTokenInput(!showTokenInput)}
-                activeOpacity={0.8}
-              >
-                <Text style={[styles.enterTokenBtnText, { color: isDark ? '#fde68a' : '#b45309' }]}>
-                  {showTokenInput ? 'Cancel' : 'Enter Code (OTP)'}
-                </Text>
-              </TouchableOpacity>
-            </View>
-
-            {showTokenInput && (
-              <View style={styles.tokenInputContainer}>
-                <TextInput
-                  style={[styles.tokenInput, { backgroundColor: isDark ? '#000000' : '#ffffff', color: isDark ? '#ffffff' : '#000000', borderColor: isDark ? '#475569' : '#cbd5e1', letterSpacing: 4, textAlign: 'center', fontSize: 18, fontWeight: 'bold' }]}
-                  placeholder="0427"
-                  placeholderTextColor="#94a3b8"
-                  value={inputToken}
-                  onChangeText={(t) => setInputToken(t.replace(/\D/g, '').slice(0, 4))}
-                  keyboardType="numeric"
-                  maxLength={4}
-                />
-                <TouchableOpacity
-                  style={[styles.verifyTokenBtn, { opacity: isVerifying || inputToken.length !== 4 ? 0.6 : 1 }]}
-                  onPress={handleVerifyOtp}
-                  disabled={isVerifying || inputToken.length !== 4}
-                  activeOpacity={0.8}
-                >
-                  {isVerifying ? (
-                    <ActivityIndicator size="small" color="#ffffff" />
-                  ) : (
-                    <Text style={styles.verifyTokenBtnText}>Verify OTP</Text>
-                  )}
-                </TouchableOpacity>
-              </View>
-            )}
-          </View>
-        )}
 
         <View style={[styles.infoRow, { borderBottomColor: colors.divider }]}>
           <View style={[styles.infoIconBox, { backgroundColor: isDark ? '#1e1b4b' : '#eef2ff' }]}>

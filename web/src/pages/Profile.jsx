@@ -12,33 +12,6 @@ export default function Profile() {
   const { theme, setTheme, isDark, colorTheme, setColorTheme } = useTheme();
   const { showToast } = useToast();
   const [stats, setStats] = useState(null);
-  const [isSendingVerification, setIsSendingVerification] = useState(false);
-  const [resendCooldown, setResendCooldown] = useState(0);
-
-  useEffect(() => {
-    let timer;
-    if (resendCooldown > 0) {
-      timer = setInterval(() => {
-        setResendCooldown((prev) => (prev > 0 ? prev - 1 : 0));
-      }, 1000);
-    }
-    return () => clearInterval(timer);
-  }, [resendCooldown]);
-
-  const handleResendVerification = async () => {
-    if (!user?.email) return;
-    setIsSendingVerification(true);
-    try {
-      const data = await authService.resendVerificationOtp(user.email);
-      showToast(data.message || 'Verification code sent to your email.', 'success');
-      setResendCooldown(data.cooldown_seconds || 60);
-    } catch (err) {
-      const msg = err.response?.data?.detail || 'Failed to send verification code.';
-      showToast(msg, 'error');
-    } finally {
-      setIsSendingVerification(false);
-    }
-  };
 
   useEffect(() => {
     async function loadStats() {
@@ -98,15 +71,6 @@ export default function Profile() {
               <p className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Email</p>
               <div className="flex items-center gap-2">
                 <span className="font-medium text-slate-800 dark:text-slate-200 truncate">{user?.email || 'N/A'}</span>
-                {user?.is_email_verified ? (
-                  <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-400">
-                    Verified
-                  </span>
-                ) : (
-                  <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-100 text-amber-700 dark:bg-amber-950/60 dark:text-amber-400">
-                    Unverified
-                  </span>
-                )}
               </div>
             </div>
           </div>
@@ -136,39 +100,7 @@ export default function Profile() {
           </div>
         </div>
 
-        {/* Email Verification Banner if Unverified */}
-        {!user?.is_email_verified && (
-          <div className="p-4 rounded-2xl bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800/60 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-            <div>
-              <p className="text-xs font-bold text-amber-900 dark:text-amber-200">
-                Email verification required for deadline email reminders
-              </p>
-              <p className="text-[11px] text-amber-700 dark:text-amber-300 mt-0.5">
-                Verify your Gmail account to receive automatic notifications before tasks are due.
-              </p>
-            </div>
-            <div className="flex items-center gap-2">
-              <button
-                type="button"
-                onClick={handleResendVerification}
-                disabled={isSendingVerification || resendCooldown > 0}
-                className="px-3 py-1.5 rounded-xl bg-amber-600 hover:bg-amber-700 text-white text-xs font-semibold disabled:opacity-50 transition-colors shadow-xs"
-              >
-                {isSendingVerification
-                  ? 'Sending...'
-                  : resendCooldown > 0
-                  ? `Resend in ${resendCooldown}s`
-                  : 'Resend Code'}
-              </button>
-              <Link
-                to={`/verify-email?email=${encodeURIComponent(user?.email || '')}`}
-                className="px-3 py-1.5 rounded-xl bg-white dark:bg-slate-800 border border-amber-300 dark:border-amber-700 text-amber-900 dark:text-amber-200 text-xs font-semibold hover:bg-amber-50 dark:hover:bg-slate-700 transition-colors"
-              >
-                Enter Code (OTP)
-              </Link>
-            </div>
-          </div>
-        )}
+
 
         {/* Theme Preferences */}
         <div className="pt-4 border-t border-slate-100 dark:border-slate-700/50 space-y-3">

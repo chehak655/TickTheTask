@@ -77,8 +77,8 @@ export default function Register() {
     setIsSubmitting(false);
 
     if (result.success) {
-      showToast('Account created! Please enter the 4-digit code sent to your email.', 'success');
-      navigate(`/verify-email?email=${encodeURIComponent(formData.email.trim())}`, { replace: true });
+      showToast('Account created successfully!', 'success');
+      navigate('/dashboard', { replace: true });
     } else {
       setErrorMessage(result.error);
     }
