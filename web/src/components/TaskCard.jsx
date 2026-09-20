@@ -198,33 +198,7 @@ export default function TaskCard({ task, onToggleStatus, onEdit, onDelete }) {
               </span>
             )}
 
-            {/* Due Date Badge */}
-            {formattedDueDate && (
-              <span
-                className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full font-medium border ${
-                  isOverdue
-                    ? 'bg-rose-100 text-rose-900 border-rose-300 dark:bg-rose-950 dark:text-rose-200 dark:border-rose-800 font-bold'
-                    : 'bg-slate-100 text-slate-700 border-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:border-slate-700'
-                }`}
-              >
-                {isOverdue ? (
-                  <AlertCircle className="w-3.5 h-3.5 text-rose-600 dark:text-rose-400" />
-                ) : (
-                  <Calendar className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400" />
-                )}
-                {isOverdue ? `Overdue: ${formattedDueDate}` : `Due: ${formattedDueDate}`}
-              </span>
-            )}
 
-            {/* Completed Date Badge */}
-            {isCompleted && formattedCompletedDate && (
-              <span
-                className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full font-medium border bg-slate-100 text-slate-700 border-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:border-slate-700"
-              >
-                <CheckCircle2 className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400" />
-                Done: {formattedCompletedDate}
-              </span>
-            )}
 
             {/* Reminder Badge */}
             {reminderText && (
