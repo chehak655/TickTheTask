@@ -1,89 +1,86 @@
 # TickTheTask
 
-**Plan it. Track it. Tick it off.**
-
-TickTheTask is a full-stack task-management application for organizing priorities, deadlines, schedules, and task progress through a React web interface and a FastAPI backend.
-
+TickTheTask is a full-stack task-management application to help organize priorities, deadlines, schedules and task progress via a React web interface and a FastAPI backend.
 ---
 
 ## Overview
 
-TickTheTask Backend is built using **FastAPI** and follows a modular architecture that separates routing, business logic, database access, validation, and security-related functionality.
+TickTheTask backend is built utilizing the FastAPI framework, while also adopting a modular architecture that separates routing, business logic, database access, validation, and security-related functionality.
 
-## Key Features
+## Project Structure
 
-- JWT-based authentication and secure registration.
-- Full Task CRUD (Create, Read, Update, Delete).
-- Deadline and calendar-based task tracking.
-- Search, filtering by status and priorities.
-- User-level data isolation.
+
+
+
+TickTheTask/
+├── .github/
+│   └── workflows/          # GitHub Actions CI/CD workflows
+│
+├── backend/                # FastAPI Python backend
+│
+├── web/                    # React + Vite web application
+│
+├── docs/                   # Project documentation
+│
+├── scripts/                # Helper and deployment scripts
+│
+├── .env.example            # Environment variable template
+├── .gitignore              # Git ignore rules
+├── CONTRIBUTING.md         # Contribution guidelines
+├── docker-compose.yml      # Local database configuration
+├── LICENSE                 # MIT License
+├── render.yaml             # Render deployment configuration
+└── README.md               # Project documentation
+
+## Features
+
+- JWT-based authentication and registration
+- Complete task management (Create, Read, Update, Delete)
+- Deadline and calendar-based tracking
+- Search, filtering by status and priorities
+- Isolated data by user
 
 ## Feature Implementation Status
 
 - [x] JWT-based authentication and registration
-- [x] Task creation, retrieval, updating, and deletion
-- [x] Deadline and calendar-based task tracking
-- [x] Search, filtering, priorities, and statuses
-- [x] User-specific task access and data isolation
+- [x] Task management
+- [x] Deadline and calendar-based tracking
+- [x] Search, filtering, priorities and statuses
+- [x] Data isolation
 - [ ] Categories and tags (Planned)
 - [ ] Subtasks (Planned)
-- [ ] Recurring tasks (Planned)
+- [ ] Recurring Tasks (Planned)
 - [ ] Offline synchronization (Planned)
 - [ ] Push notifications (Planned)
 - [ ] Advanced productivity analytics (Planned)
-
 ---
 
 ## Live Demo
 
-**Web application:** [https://chehak655.github.io/TickTheTask/](https://chehak655.github.io/TickTheTask/)
-
-> **Note on Cold Starts:** The backend uses a free Render plan. If it has been inactive, the first request may take up to 60 seconds while the service wakes up. A loading spinner will appear in the web app during this time.
-
+Web application: [https://chehak655.github.io/TickTheTask/](https://chehak655.github.io/TickTheTask/)
 ---
 
 ## Visuals
+
 <img width="1024" height="469" alt="login" src="https://github.com/user-attachments/assets/1a94cdb0-65a9-4aea-ae19-d8563d2cca85" />
 <img width="1024" height="480" alt="dashboard" src="https://github.com/user-attachments/assets/00cd5b0c-ecd2-424d-a5e4-63c861980d1c" />
 <img width="556" height="555" alt="task-creation" src="https://github.com/user-attachments/assets/3252d9fe-a36c-4cf4-96e9-d3f17056321a" />
 <img width="1024" height="472" alt="tasks" src="https://github.com/user-attachments/assets/2860bf10-8c0f-4674-9633-14791649105d" />
 <img width="1024" height="470" alt="calendar" src="https://github.com/user-attachments/assets/c3cd6028-22a2-43b7-aaa9-c52c619a30cc" />
-
-
 ---
 
 ## Technology Stack
 
 | Layer | Technology |
 |---|---|
-| **Frontend** | React 18, Vite, Tailwind CSS v4, Lucide React |
-| **Backend** | Python 3.10+, FastAPI, SQLAlchemy |
-| **Database** | PostgreSQL (also supports MySQL) |
-| **Migrations** | Alembic |
-| **API Server** | Uvicorn |
-| **Testing** | Pytest |
-| **Local Infrastructure**| Docker Compose |
-| **CI** | GitHub Actions |
-
----
-
-## Project Structure
-
-```text
-TickTheTask/
-├── backend/                  # FastAPI backend
-│   ├── app/                  # Application source code
-│   ├── alembic/              # Database migrations
-│   ├── tests/                # Backend tests
-│   ├── requirements.txt      # Python dependencies
-│   └── .env.example          # Backend environment template
-├── web/                      # React/Vite frontend
-├── docs/                     # Documentation
-├── scripts/                  # Helper and deployment scripts
-├── docker-compose.yml        # Local database configuration
-├── .env.example              # Root environment template
-└── README.md                 # Project documentation
-```
+| Frontend | React 18, Vite, Tailwind CSS v4, Lucide React |
+| Backend | Python 3.10+, FastAPI, SQLAlchemy |
+| Database | PostgreSQL (also supports MySQL) |
+| Migrations | Alembic |
+| API Server | Uvicorn |
+| Testing | Pytest |
+| Local Infrastructure| Docker Compose |
+| CI | GitHub Actions |
 
 ---
 
@@ -91,27 +88,26 @@ TickTheTask/
 
 ```text
 ┌─────────────────────────────┐
-│          Web Client         │
+│     Web Client     │
 └──────────────┬──────────────┘
-               │ HTTP Requests
-               ▼
+│ HTTP Requests
+▼
 ┌─────────────────────────────┐
-│        FastAPI Routes       │
+│    FastAPI Routes    │
 └──────────────┬──────────────┘
-               ▼
+▼
 ┌─────────────────────────────┐
-│       Service Layer         │
+│    Service Layer     │
 └──────────────┬──────────────┘
-               ▼
+▼
 ┌─────────────────────────────┐
-│      SQLAlchemy ORM         │
+│   SQLAlchemy ORM     │
 └──────────────┬──────────────┘
-               ▼
+▼
 ┌─────────────────────────────┐
-│       PostgreSQL            │
+│    PostgreSQL      │
 └─────────────────────────────┘
 ```
-
 ---
 
 ## Prerequisites
@@ -129,7 +125,6 @@ node --version
 npm --version
 docker --version
 ```
-
 ---
 
 ## Local Setup
@@ -141,7 +136,7 @@ cd TickTheTask
 ```
 
 ### 2. Start PostgreSQL
-Ensure Docker Desktop is running, then execute this command from the repository root:
+Make sure Docker Desktop is running, and then run this command in the root of the repository:
 ```bash
 docker compose up -d
 ```
@@ -151,18 +146,18 @@ docker compose ps
 docker compose logs
 ```
 
-### 3. Configure the backend
+### 3. Set up the backend
 Copy the root environment template to `.env` in the backend directory:
 
-**Windows PowerShell:**
+Windows PowerShell:
 ```powershell
 Copy-Item .env.example backend/.env
 ```
-**Windows Command Prompt:**
+Windows Command Prompt:
 ```cmd
 copy .env.example backend\.env
 ```
-**macOS/Linux:**
+macOS/Linux:
 ```bash
 cp .env.example backend/.env
 ```
@@ -173,15 +168,15 @@ Update the database credentials and other values in `backend/.env`.
 cd backend
 python -m venv .venv
 ```
-**Windows PowerShell:**
+Windows PowerShell:
 ```powershell
 .\.venv\Scripts\Activate.ps1
 ```
-**Windows Command Prompt:**
+Windows Command Prompt:
 ```cmd
 .venv\Scripts\activate
 ```
-**macOS/Linux:**
+macOS/Linux:
 ```bash
 source .venv/bin/activate
 ```
@@ -196,18 +191,17 @@ python -m pip install -r requirements.txt
 ```bash
 python -c "import secrets; print(secrets.token_urlsafe(32))"
 ```
-Copy the generated value into `SECRET_KEY` in `backend/.env`.
+Copy the value into `SECRET_KEY` in `backend/.env`.
 
 ### 7. Apply migrations
 ```bash
 python -m alembic upgrade head
 ```
-
 ---
 
 ## Environment Variables
 
-A typical PostgreSQL configuration in `backend/.env` will look like this:
+A general PostgreSQL config in `backend/.env` will look like:
 
 ```env
 ENVIRONMENT=dev
@@ -227,7 +221,6 @@ ACCESS_TOKEN_EXPIRE_MINUTES=1440
 
 BACKEND_CORS_ORIGINS=["http://localhost:5173", "http://127.0.0.1:5173"]
 ```
-
 ---
 
 ## Running the Backend
@@ -236,8 +229,7 @@ From the `backend` directory:
 ```bash
 python -m uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
 ```
-The backend is normally available at: `http://127.0.0.1:8000`
-
+The backend is generally available from: `http://127.0.0.1:8000`
 ---
 
 ## Running the Web Frontend
@@ -248,13 +240,12 @@ cd web
 npm install
 npm run dev
 ```
-Vite normally displays the frontend URL in the terminal, commonly: `http://localhost:5173`
-
+The Vite frontend typically prints out the URL in the terminal, commonly: `http://localhost:5173`
 ---
 
 ## Database Migrations
 
-Run these commands from the `backend` directory:
+From the `backend` directory, run these commands:
 
 ```bash
 # Show the current revision
@@ -263,22 +254,20 @@ python -m alembic current
 # Show migration history
 python -m alembic history
 
-# Apply pending migrations
+# Apply migrations
 python -m alembic upgrade head
 
-# Roll back one migration
+# Roll back version
 python -m alembic downgrade -1
 ```
-
 ---
 
 ## API Documentation
+FastAPI will generally expose:
 
-When the backend is running, FastAPI automatically exposes:
-- **Swagger UI:** `http://127.0.0.1:8000/docs`
-- **ReDoc:** `http://127.0.0.1:8000/redoc`
-- **OpenAPI schema:** `http://127.0.0.1:8000/openapi.json`
-
+- Swagger UI: `http://127.0.0.1:8000/docs`
+- ReDoc: `http://127.0.0.1:8000/redoc`
+- OpenAPI schema: `http://127.0.0.1:8000/openapi.json`
 ---
 
 ## Testing
@@ -288,52 +277,39 @@ From the `backend` directory:
 python -m pytest tests/ -v
 ```
 
-The test suite covers:
-- Registration, login, and token expiry
-- Invalid credentials and missing tokens
-- Task CRUD operations
-- User-level task isolation
-- Deadline behavior
-- Security hardening
-
----
 
 ## Deployment
 
 For production deployment (Render):
-1. Configure a PostgreSQL managed database.
-2. Add all required environment variables to the hosting provider's dashboard.
-3. Run migrations (`alembic upgrade head`) in a controlled deployment step.
-4. Start Uvicorn on the provider's assigned port: `uvicorn app.main:app --host 0.0.0.0 --port $PORT`
-5. Configure the exact frontend origin in the CORS environment variable.
+1. Set up a PostgreSQL managed database
+2. Add all of the necessary environment variables to your dashboard
+3. Apply migrations (`alembic upgrade head`) in a controlled way
+4. Start Uvicorn on your providers given port: `uvicorn app.main:app --host 0.0.0.0 --port $PORT`
+5. Set the exact origin of the web frontend in your CORS environment variables
 6. Enable HTTPS.
-
 ---
 
 ## Security
-
-- Passwords are securely hashed using bcrypt.
-- JWT secrets are kept private in environment variables.
-- Incoming request data is validated using Pydantic.
-- Strict ownership checks are enforced on every task operation to prevent unauthorized access.
-- CORS origins are strictly bounded in production.
-- Production environments enforce strong SECRET_KEY lengths.
-- Rate limiting is configured for authentication routes using SlowAPI.
-
+- Secure password hashing with bcrypt
+- Secure JWT secrets in environment variables
+- Request data validation with Pydantic
+- Strict ownership checks on all task operations
+- Strict CORS origin bounding (in production)
+- Strong SECRET_KEY lengths (in production)
+- Rate limiting authentication routes, via SlowAPI.
 ---
 
 ## Contributing
-1. Fork the repository.
+1. Fork the repository
 2. Create a branch: `git checkout -b feature/your-feature`
-3. Make and test your changes.
+3. Make and test your changes
 4. Commit your changes: `git commit -m "Add: describe your change"`
 5. Push the branch and open a pull request.
-
 ---
 
 ## License
 This project is licensed under the MIT License. See the `LICENSE` file for the complete text.
 
 ## Author
-**Chehak**
+Chehak
 GitHub: [https://github.com/chehak655](https://github.com/chehak655)
